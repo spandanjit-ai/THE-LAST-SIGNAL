@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Copy,
   Check,
+  Zap,
 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 import { NodeWireCipherLock } from '../challenges/NodeWireCipherLock';
@@ -270,29 +271,47 @@ export const TransmissionRole: React.FC<TransmissionRoleProps> = ({ onOpenVault 
             )}
           </div>
 
-          <button
-            onClick={handleCommitDecode}
-            disabled={isCipherDecoded}
-            className={`px-5 py-2.5 rounded font-black text-xs tracking-wider uppercase transition-all flex items-center gap-2 ${
-              isCipherDecoded
-                ? 'bg-space-950 border border-emerald-500/50 text-emerald-300 text-glow-emerald cursor-default'
-                : isMatch
-                ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25'
-                : 'bg-space-950 hover:bg-space-850 text-slate-200 border border-slate-700'
-            }`}
-          >
-            {isCipherDecoded ? (
-              <>
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                SIGNAL CONFIRMED &amp; COMMITTED
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4" />
-                LOCK IN DECRYPTED SIGNAL
-              </>
+          <div className="flex flex-wrap items-center gap-2">
+            {!isCipherDecoded && (
+              <button
+                type="button"
+                onClick={() => {
+                  setShift(2);
+                  decodeCipher('THE LAST SIGNAL');
+                  setCandidateInput('THE LAST SIGNAL');
+                  SoundFX.playSuccessPing();
+                }}
+                className="px-4 py-2.5 rounded font-black text-xs tracking-wider uppercase transition-all flex items-center gap-1.5 bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/30"
+                title="Automatically set shift to 2 and commit decoded signal"
+              >
+                <Zap className="w-4 h-4" /> ⚡ AUTO-DECODE (SHIFT 2)
+              </button>
             )}
-          </button>
+
+            <button
+              onClick={handleCommitDecode}
+              disabled={isCipherDecoded}
+              className={`px-5 py-2.5 rounded font-black text-xs tracking-wider uppercase transition-all flex items-center gap-2 ${
+                isCipherDecoded
+                  ? 'bg-space-950 border border-emerald-500/50 text-emerald-300 text-glow-emerald cursor-default'
+                  : isMatch
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25'
+                  : 'bg-space-950 hover:bg-space-850 text-slate-200 border border-slate-700'
+              }`}
+            >
+              {isCipherDecoded ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  SIGNAL CONFIRMED &amp; COMMITTED
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  LOCK IN DECRYPTED SIGNAL
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

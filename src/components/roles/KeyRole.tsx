@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Compass,
   ArrowRight,
+  Zap,
 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 import { XRayLens } from '../challenges/XRayLens';
@@ -128,9 +129,20 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                   onClick={startFrequencyAnalysis}
-                  className="px-7 py-3 rounded font-black text-xs bg-violet hover:bg-violet/90 text-white transition-all flex items-center gap-2 shadow-xl shadow-violet/25"
+                  className="px-6 py-2.5 rounded font-black text-xs bg-violet hover:bg-violet/90 text-white transition-all flex items-center gap-2 shadow-xl shadow-violet/25"
                 >
                   <Sparkles className="w-4 h-4" /> INITIATE TELEMETRY SCAN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    SoundFX.playSuccessPing();
+                    discoverKey();
+                  }}
+                  className="px-5 py-2.5 rounded font-black text-xs bg-violet-600/30 border border-violet-400 text-violet-300 hover:bg-violet-600/50 transition-all flex items-center gap-1.5 shadow-md"
+                  title="Immediately discover the decryption key"
+                >
+                  <Zap className="w-4 h-4" /> ⚡ AUTO-RECOVER KEY
                 </button>
               </div>
             )}

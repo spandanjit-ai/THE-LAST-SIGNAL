@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMission } from '../../hooks/useMission';
-import { CIPHER_LOCK_NODES, LockNodeDefinition } from '../../engine/cipherLockLogic';
+import { CIPHER_LOCK_NODES, LockNodeDefinition, EXPECTED_NODE_SEQUENCE } from '../../engine/cipherLockLogic';
 import { Cpu, Zap, RotateCcw, CheckCircle2, AlertTriangle, Link2 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 
@@ -62,6 +62,18 @@ export const NodeWireCipherLock: React.FC = () => {
               <span className="font-mono text-xs text-slate-300 font-bold">
                 STAGE: <strong className="text-violet-300">{connectedIds.length}/5 WIRED</strong>
               </span>
+              <button
+                onClick={() => {
+                  SoundFX.playSuccessPing();
+                  for (const node of EXPECTED_NODE_SEQUENCE) {
+                    connectNodeWire(node);
+                  }
+                }}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-bold rounded bg-violet-600 hover:bg-violet-500 text-white shadow-md transition-colors"
+                title="Automatically wire all 5 nodes in harmonic order"
+              >
+                <Zap className="w-3.5 h-3.5" /> ⚡ AUTO-WIRE (5/5)
+              </button>
               <button
                 onClick={resetNodeWires}
                 disabled={connectedIds.length === 0}

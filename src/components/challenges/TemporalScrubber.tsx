@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMission } from '../../hooks/useMission';
 import { TimelineEvent } from '../../engine/missionTypes';
-import { History, Eye, ArrowLeft, Key, ShieldCheck, Clock, Radio, ShieldAlert } from 'lucide-react';
+import { History, Eye, ArrowLeft, Key, ShieldCheck, Clock, Radio, ShieldAlert, Zap } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 
 export const TemporalScrubber: React.FC = () => {
@@ -86,8 +86,20 @@ export const TemporalScrubber: React.FC = () => {
           </div>
         </div>
 
-        {/* Live vs Preview Indicator */}
+        {/* Live vs Preview Indicator & Quick Auto-Stabilize */}
         <div className="flex items-center gap-2">
+          {!entropyState?.isStabilized && (
+            <button
+              onClick={() => {
+                SoundFX.playSuccessPing();
+                handleApplyDampener('0x7749-CLEAR');
+              }}
+              className="flex items-center gap-1 px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-mono text-[11px] font-black rounded shadow transition-all whitespace-nowrap"
+              title="Immediately neutralize entropy cascade with dampener checksum"
+            >
+              <Zap className="w-3.5 h-3.5" /> ⚡ AUTO-STABILIZE
+            </button>
+          )}
           {previewEvent ? (
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-amber-950 border border-amber-400 text-amber-300 font-mono text-xs font-bold animate-pulse shadow-[0_0_15px_rgba(245,158,11,0.5)]">

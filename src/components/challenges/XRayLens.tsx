@@ -90,6 +90,24 @@ export const XRayLens: React.FC<XRayLensProps> = ({ onClueRevealed }) => {
             REVEALED: <strong className="text-cyan-400">{revealedCount}/5 SECTORS</strong>
           </span>
           <button
+            onClick={() => {
+              setAccessibleMode(true);
+              setRevealedSectors({
+                'sector-alpha': true,
+                'sector-beta': true,
+                'sector-gamma': true,
+                'sector-delta': true,
+                'sector-omega': true,
+              });
+              SoundFX.playSuccessPing();
+            }}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold rounded bg-cyan-500/20 border border-cyan-400 text-cyan-200 hover:bg-cyan-500/40 transition-colors shadow-sm"
+            title="Automatically reveal all concealed sectors"
+          >
+            <Sparkles className="w-3 h-3 text-cyan-300" />
+            ⚡ AUTO-REVEAL ALL
+          </button>
+          <button
             onClick={() => setAccessibleMode(!accessibleMode)}
             className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-cyan-950/40 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-900/50 transition-colors"
             title="Toggle accessible high-visibility view"

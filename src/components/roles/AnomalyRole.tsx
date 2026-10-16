@@ -188,6 +188,25 @@ export const AnomalyRole: React.FC = () => {
                   </span>
                 )}
               </p>
+
+              {!isC1Completed && (
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      SoundFX.playSupernova();
+                      const el = containmentNodeRef.current;
+                      if (el) el.setAttribute(CONTAINMENT_ATTRIBUTE, CONTAINMENT_TARGET_VALUE);
+                      completeChallenge('C1', CONTAINMENT_ATTRIBUTE, CONTAINMENT_TARGET_VALUE);
+                      confirmAnomaly(ANOMALY_CODE);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-lg shadow-amber-500/30 transition-all cursor-pointer"
+                    title="Automatically apply OVERRIDE to the DOM node"
+                  >
+                    <Zap className="w-4 h-4" /> ⚡ AUTO-OVERRIDE PROTOCOL (SOLVE C1)
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -248,9 +267,20 @@ export const AnomalyRole: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded text-xs font-black uppercase tracking-wider bg-amber hover:bg-amber/90 text-slate-950 transition-all flex items-center gap-2 shadow-lg shadow-amber/25"
+                  className="px-5 py-2.5 rounded text-xs font-black uppercase tracking-wider bg-amber hover:bg-amber/90 text-slate-950 transition-all flex items-center gap-2 shadow-lg shadow-amber/25"
                 >
                   <Send className="w-4 h-4" /> CONFIRM
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    SoundFX.playSupernova();
+                    confirmAnomaly(ANOMALY_CODE);
+                  }}
+                  className="px-4 py-2.5 rounded text-xs font-black uppercase tracking-wider bg-amber-500/20 border border-amber-400 text-amber-300 hover:bg-amber-500/40 transition-all flex items-center gap-1.5"
+                  title="Automatically authenticate anomaly token"
+                >
+                  <Zap className="w-3.5 h-3.5" /> ⚡ AUTO-CONFIRM
                 </button>
               </div>
 
