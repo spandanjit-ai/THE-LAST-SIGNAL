@@ -27,21 +27,21 @@ export const EvidenceDossier: React.FC<EvidenceDossierProps> = ({ onOpenVault })
     <div className="border border-noir-border bg-noir-surface/90 rounded p-4 sm:p-5 backdrop-blur-md">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5 pb-2.5 border-b border-noir-border">
         <div className="flex items-center gap-2">
-          <span className="font-display font-bold text-sm tracking-wide text-signal-text">
+          <span className="font-display font-extrabold text-sm tracking-wide text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.25)]">
             EVIDENCE DOSSIER
           </span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-noir-base border border-noir-border text-signal-muted">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-noir-base border border-signal-cyan/30 text-cyan-400 font-bold">
             {[isTransmissionResolved, isKeyResolved, isAnomalyResolved].filter(Boolean).length} / 3 ASSEMBLED
           </span>
         </div>
 
         {allResolved ? (
           <div className="flex items-center gap-1.5 text-xs font-mono text-signal-cyan">
-            <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan animate-pulse" />
-            <span>ALL FRAGMENTS AUTHENTICATED</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan animate-pulse shadow-[0_0_8px_#22d3ee]" />
+            <span className="font-bold tracking-wider">ALL FRAGMENTS AUTHENTICATED</span>
           </div>
         ) : (
-          <div className="text-xs font-mono text-signal-dim">
+          <div className="text-xs font-mono text-cyan-400/60 tracking-wider">
             AWAITING INTER-TAB CONVERGENCE...
           </div>
         )}
@@ -75,7 +75,7 @@ export const EvidenceDossier: React.FC<EvidenceDossierProps> = ({ onOpenVault })
             {isTransmissionResolved ? (
               <span className="text-signal-cyan font-bold">&quot;THE LAST SIGNAL&quot;</span>
             ) : (
-              <span className="text-signal-dim">CIPHER: VJG NCUV UKIPCN</span>
+              <span className="text-cyan-400/70">CIPHER: VJG NCUV UKIPCN</span>
             )}
           </div>
         </div>
@@ -87,26 +87,26 @@ export const EvidenceDossier: React.FC<EvidenceDossierProps> = ({ onOpenVault })
             isKeyResolved
               ? 'border-signal-violet/40 bg-signal-violet/10 text-signal-violet'
               : currentRole === 'key'
-              ? 'border-signal-violet/30 bg-noir-elevated text-signal-text ring-1 ring-signal-violet/20'
-              : 'border-noir-border bg-noir-base text-signal-dim hover:border-noir-border/80 hover:text-signal-muted'
+              ? 'border-signal-violet/30 bg-noir-elevated text-purple-200 ring-1 ring-signal-violet/20'
+              : 'border-noir-border bg-noir-base text-purple-400/70 hover:border-noir-border/80 hover:text-purple-300'
           }`}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-mono tracking-wider uppercase flex items-center gap-1.5">
+            <span className="text-[10px] font-mono tracking-wider uppercase flex items-center gap-1.5 text-purple-300">
               <KeyRound className="w-3 h-3 text-signal-violet" />
               <span>FRAGMENT B // KEY SHIFT</span>
             </span>
             {isKeyResolved ? (
               <ShieldCheck className="w-3.5 h-3.5 text-signal-violet" />
             ) : (
-              <Lock className="w-3 h-3 text-signal-dim" />
+              <Lock className="w-3 h-3 text-purple-400/50" />
             )}
           </div>
           <div className="font-mono text-xs font-semibold tracking-wider">
             {isKeyResolved ? (
               <span className="text-signal-violet font-bold">OFFSET: -3 (ROT-3)</span>
             ) : (
-              <span className="text-signal-dim">1420.4 MHz UNTUNED</span>
+              <span className="text-purple-400/70">1420.4 MHz UNTUNED</span>
             )}
           </div>
         </div>
@@ -118,26 +118,26 @@ export const EvidenceDossier: React.FC<EvidenceDossierProps> = ({ onOpenVault })
             isAnomalyResolved
               ? 'border-signal-amber/40 bg-signal-amber/10 text-signal-amber'
               : currentRole === 'anomaly'
-              ? 'border-signal-amber/30 bg-noir-elevated text-signal-text ring-1 ring-signal-amber/20'
-              : 'border-noir-border bg-noir-base text-signal-dim hover:border-noir-border/80 hover:text-signal-muted'
+              ? 'border-signal-amber/30 bg-noir-elevated text-amber-200 ring-1 ring-signal-amber/20'
+              : 'border-noir-border bg-noir-base text-amber-400/70 hover:border-noir-border/80 hover:text-amber-300'
           }`}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-mono tracking-wider uppercase flex items-center gap-1.5">
+            <span className="text-[10px] font-mono tracking-wider uppercase flex items-center gap-1.5 text-amber-300">
               <Binary className="w-3 h-3 text-signal-amber" />
               <span>FRAGMENT C // DOM TOKEN</span>
             </span>
             {isAnomalyResolved ? (
               <ShieldCheck className="w-3.5 h-3.5 text-signal-amber" />
             ) : (
-              <Lock className="w-3 h-3 text-signal-dim" />
+              <Lock className="w-3 h-3 text-amber-400/50" />
             )}
           </div>
           <div className="font-mono text-xs font-semibold tracking-wider">
             {isAnomalyResolved ? (
               <span className="text-signal-amber font-bold">SIG-7749-OMEGA</span>
             ) : (
-              <span className="text-signal-dim">DEVTOOLS DOM INSPECTION</span>
+              <span className="text-amber-400/70">DEVTOOLS DOM INSPECTION</span>
             )}
           </div>
         </div>

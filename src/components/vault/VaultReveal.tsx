@@ -123,20 +123,23 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
               )}
             </div>
             <div>
-              <h2 className="font-display font-bold text-lg lg:text-xl text-signal-text tracking-tight flex items-center gap-2">
+              <h2 className="font-display font-extrabold text-lg lg:text-xl text-cyan-300 tracking-tight flex items-center gap-2 drop-shadow-[0_0_10px_rgba(34,211,238,0.25)]">
                 CLASSIFIED ARCHIVE // CORE VAULT
                 <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase font-bold ${
                     state.unlockStatus === 'UNLOCKED'
-                      ? 'border-signal-cyan/40 text-signal-cyan bg-noir-base'
+                      ? 'border-signal-cyan/60 text-signal-cyan bg-signal-cyan/10 shadow-[0_0_8px_rgba(34,211,238,0.3)]'
                       : 'border-noir-border text-signal-dim bg-noir-base'
                   }`}
                 >
                   {state.unlockStatus}
                 </span>
               </h2>
-              <div className="text-xs font-mono text-signal-dim">
-                AUTH: SHA-256 // TEMPORAL_PHASE: {state.currentPhase} [{state.phaseSecondsRemaining}s]
+              <div className="text-xs font-mono text-cyan-400/70">
+                AUTH: <span className="text-purple-300">SHA-256</span> // TEMPORAL_PHASE:{' '}
+                <span className={state.currentPhase === 'STABLE' ? 'text-cyan-300 font-bold' : 'text-amber-400'}>
+                  {state.currentPhase} [{state.phaseSecondsRemaining}s]
+                </span>
               </div>
             </div>
           </div>
@@ -338,27 +341,30 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
               <div className="flex items-center gap-3 text-signal-cyan border-b border-noir-border pb-4">
                 <ShieldCheck className="w-6 h-6 text-signal-cyan flex-shrink-0" />
                 <div>
-                  <h3 className="font-display font-bold text-xl text-signal-text tracking-tight">
+                  <h3 className="font-display font-extrabold text-xl text-cyan-300 tracking-tight drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]">
                     DECRYPTED TRANSMISSION ARCHIVE RECOVERED
                   </h3>
-                  <div className="text-xs font-mono text-signal-cyan mt-0.5">
+                  <div className="text-xs font-mono text-cyan-400 font-bold mt-0.5">
                     CLEARED FOR PLAYBACK // ORIGIN: DEEP SPACE EXPEDITION
                   </div>
                 </div>
               </div>
 
               {/* The Decrypted Message Card */}
-              <div className="p-6 rounded bg-noir-surface border border-noir-border font-mono space-y-4">
+              <div className="p-6 rounded bg-noir-surface border border-signal-cyan/30 font-mono space-y-4 shadow-[0_0_20px_rgba(34,211,238,0.08)]">
                 <div className="flex items-center justify-between text-xs text-signal-dim border-b border-noir-border pb-2">
-                  <span>PAYLOAD STREAM: 0x88F9_FINAL</span>
-                  <span className="text-signal-cyan font-bold">STATUS: DECRYPTED</span>
+                  <span className="text-purple-300 font-semibold">PAYLOAD STREAM: 0x88F9_FINAL</span>
+                  <span className="text-signal-cyan font-bold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan animate-pulse shadow-[0_0_6px_#22d3ee]" />
+                    STATUS: DECRYPTED
+                  </span>
                 </div>
 
-                <div className="text-2xl sm:text-3xl font-display font-extrabold tracking-widest text-signal-cyan">
+                <div className="text-3xl sm:text-4xl font-display font-extrabold tracking-widest bg-gradient-to-r from-signal-cyan via-white to-signal-violet bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(34,211,238,0.4)] select-all">
                   &quot;THE LAST SIGNAL&quot;
                 </div>
 
-                <div className="text-sm leading-relaxed text-signal-text italic pt-2">
+                <div className="text-sm leading-relaxed text-cyan-100/90 italic pt-2 font-mono">
                   <TerminalText
                     text="To all listening exploratory vessels across the quadrant: The anomaly has stabilized. The carrier network has held. The archive is secured for all future transmissions. Transmission sequence complete."
                     speed={18}
@@ -466,10 +472,10 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
               <div>
                 <label
                   htmlFor="vault-input"
-                  className="block text-xs font-mono text-signal-muted mb-2 flex items-center justify-between"
+                  className="block text-xs font-mono mb-2 flex items-center justify-between"
                 >
-                  <span>SUBMIT DECRYPTED TRANSMISSION PASSPHRASE:</span>
-                  <span className="text-signal-dim">FORMAT: &quot;THE LAST SIGNAL&quot;</span>
+                  <span className="text-cyan-300 font-bold tracking-wide">SUBMIT DECRYPTED TRANSMISSION PASSPHRASE:</span>
+                  <span className="text-purple-300 font-mono font-semibold">FORMAT: &quot;THE LAST SIGNAL&quot;</span>
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
@@ -479,7 +485,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                     value={inputAnswer}
                     onChange={(e) => setInputAnswer(e.target.value)}
                     disabled={isSubmitting}
-                    className="flex-1 px-4 py-3 rounded bg-noir-base border border-noir-border focus:border-signal-cyan text-signal-text font-mono text-sm tracking-widest uppercase outline-none transition-all"
+                    className="flex-1 px-4 py-3 rounded bg-noir-base border border-signal-cyan/40 focus:border-signal-cyan text-cyan-200 font-mono text-sm tracking-widest uppercase outline-none transition-all shadow-[0_0_10px_rgba(34,211,238,0.1)] focus:shadow-[0_0_15px_rgba(34,211,238,0.25)] placeholder:text-slate-600"
                   />
                   <button
                     type="submit"

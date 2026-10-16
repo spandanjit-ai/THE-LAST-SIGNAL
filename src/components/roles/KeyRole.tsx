@@ -39,10 +39,10 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
               <KeyRound className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[10px] font-mono text-signal-violet uppercase tracking-widest">
+              <div className="text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
                 CRYPTOGRAPHIC ARCHIVE NODE
               </div>
-              <h2 className="font-display font-bold text-xl text-signal-text tracking-tight">
+              <h2 className="font-display font-bold text-xl text-purple-300 tracking-tight drop-shadow-[0_0_10px_rgba(139,124,255,0.25)]">
                 CIPHER PARAMETER RECOVERY
               </h2>
             </div>
@@ -50,22 +50,22 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
 
           <div className="flex items-center gap-2 font-mono text-xs">
             {isKeyUnlocked ? (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#8B7CFF]/15 border border-[#8B7CFF]/40 text-signal-violet">
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#8B7CFF]/15 border border-[#8B7CFF]/40 text-purple-300 font-bold">
                 <ShieldCheck className="w-3.5 h-3.5 text-signal-violet" />
-                KEY RECOVERED & SYNCED
+                KEY RECOVERED &amp; SYNCED
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-noir-base border border-noir-border text-signal-dim">
-                <Lock className="w-3.5 h-3.5" />
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-noir-base border border-purple-500/30 text-purple-300/80">
+                <Lock className="w-3.5 h-3.5 text-purple-400" />
                 RESONANCE LOCK ACTIVE
               </span>
             )}
           </div>
         </div>
 
-        <p className="text-xs font-mono text-signal-muted leading-relaxed max-w-2xl">
+        <p className="text-xs font-mono text-slate-300 leading-relaxed max-w-2xl">
           The transmission cipher offset is stored within a harmonic carrier subchannel.
-          Tune the resonance frequency slider into the hydrogen carrier line [1420.4 MHz] to extract the decryption parameters.
+          Tune the resonance frequency slider into the <span className="text-purple-300 font-bold">hydrogen carrier line [1420.4 MHz]</span> to extract the <span className="text-cyan-300 font-bold">decryption parameters</span>.
         </p>
       </div>
 
@@ -75,12 +75,12 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
           <div className="flex items-center justify-between pb-3 border-b border-noir-border">
             <div className="flex items-center gap-2">
               <Compass className="w-4 h-4 text-signal-violet" />
-              <h3 className="font-display font-bold text-lg text-signal-text tracking-wide">
+              <h3 className="font-display font-bold text-lg text-purple-300 tracking-wide drop-shadow-[0_0_8px_rgba(139,124,255,0.25)]">
                 HARMONIC RESONANCE TUNER
               </h3>
             </div>
             <div className="text-xs font-mono text-signal-muted">
-              TARGET FREQUENCY: <span className="text-signal-violet font-bold">1420.4 MHz</span>
+              TARGET FREQUENCY: <span className="text-purple-300 font-bold">1420.4 MHz</span>
             </div>
           </div>
 

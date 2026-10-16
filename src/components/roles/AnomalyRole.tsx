@@ -68,10 +68,10 @@ export const AnomalyRole: React.FC = () => {
               {isC1Completed ? <Zap className="w-5 h-5" /> : <Radio className="w-5 h-5" />}
             </div>
             <div>
-              <div className="text-[10px] text-signal-muted uppercase tracking-widest">
+              <div className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
                 SECTOR 0x7749 // ANOMALY TELEMETRY
               </div>
-              <h2 className="font-display font-bold text-xl text-signal-text tracking-tight">
+              <h2 className="font-display font-bold text-xl text-amber-300 tracking-tight drop-shadow-[0_0_10px_rgba(255,180,84,0.25)]">
                 CONTAINMENT ISOLATOR
               </h2>
             </div>
@@ -84,7 +84,7 @@ export const AnomalyRole: React.FC = () => {
                 OVERRIDE VERIFIED
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber animate-pulse">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber animate-pulse font-bold">
                 <ShieldAlert className="w-3.5 h-3.5" />
                 QUARANTINE ACTIVE
               </span>
@@ -141,10 +141,10 @@ export const AnomalyRole: React.FC = () => {
 
               {/* Status Header */}
               <div className="space-y-1">
-                <div className="text-[10px] text-signal-amber tracking-widest uppercase">
+                <div className="text-[10px] text-amber-400 font-bold tracking-widest uppercase">
                   CONTAINMENT PROTOCOL RESTRICTED
                 </div>
-                <div className="font-display font-bold text-2xl sm:text-3xl text-signal-text tracking-wide">
+                <div className="font-display font-extrabold text-2xl sm:text-3xl text-amber-300 tracking-wide drop-shadow-[0_0_12px_rgba(255,180,84,0.3)]">
                   ISOLATOR NODE #0x7749
                 </div>
               </div>
@@ -152,21 +152,21 @@ export const AnomalyRole: React.FC = () => {
               {/* Minimal Tactical Metadata */}
               <div className="p-3.5 rounded bg-noir-base/80 border border-noir-border/80 inline-flex flex-wrap items-center justify-center gap-4 text-xs text-signal-dim">
                 <div>
-                  NODE: <span className="text-signal-text font-bold">#{CONTAINMENT_ELEMENT_ID}</span>
+                  NODE: <span className="text-cyan-300 font-bold">#{CONTAINMENT_ELEMENT_ID}</span>
                 </div>
                 <div className="text-noir-border">//</div>
                 <div>
-                  PROTOCOL: <span className="text-signal-amber font-bold">&quot;RESTRICTED&quot;</span>
+                  PROTOCOL: <span className="text-amber-400 font-bold">&quot;RESTRICTED&quot;</span>
                 </div>
               </div>
 
               {/* Single Atmospheric Hacker Directive */}
-              <p className="text-xs text-signal-muted max-w-md mx-auto leading-relaxed">
+              <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
                 Quarantine locks isolate this carrier packet. Inspect this DOM node in DevTools and mutate{' '}
-                <code className="text-signal-cyan px-1 py-0.5 rounded bg-noir-base border border-noir-border">
+                <code className="text-signal-cyan px-1.5 py-0.5 rounded bg-noir-base border border-signal-cyan/30 font-bold">
                   {CONTAINMENT_ATTRIBUTE}
                 </code>{' '}
-                to <span className="text-signal-amber font-bold">&quot;OVERRIDE&quot;</span> to disengage containment.
+                to <span className="text-amber-300 font-bold">&quot;OVERRIDE&quot;</span> to disengage containment.
               </p>
             </>
           ) : (

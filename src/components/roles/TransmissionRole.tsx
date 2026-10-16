@@ -45,34 +45,34 @@ export const TransmissionRole: React.FC<{ onOpenVault?: () => void }> = () => {
               <Radio className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[10px] font-mono text-signal-cyan uppercase tracking-widest">
+              <div className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-widest">
                 INCOMING CARRIER INTERCEPT
               </div>
-              <h2 className="font-display font-bold text-xl text-signal-text tracking-tight">
+              <h2 className="font-display font-bold text-xl text-cyan-300 tracking-tight drop-shadow-[0_0_10px_rgba(34,211,238,0.2)]">
                 RAW CIPHERTEXT STREAM
               </h2>
             </div>
           </div>
 
           <div className="text-xs font-mono text-signal-muted">
-            CHANNEL: <span className="text-signal-text font-bold">ALPHA-7</span> // FREQ: <span className="text-signal-cyan font-bold">1420.405 MHz</span>
+            CHANNEL: <span className="text-cyan-300 font-bold">ALPHA-7</span> // FREQ: <span className="text-signal-cyan font-bold">1420.405 MHz</span>
           </div>
         </div>
 
         {/* Crisp Ciphertext Display */}
         <div className="p-5 rounded bg-noir-base border border-noir-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="text-[10px] font-mono text-signal-dim uppercase tracking-wider mb-1">
+            <div className="text-[10px] font-mono text-cyan-400/80 uppercase tracking-wider mb-1 font-semibold">
               PAYLOAD BUFFER (ENCODED)
             </div>
-            <div className="text-3xl sm:text-4xl font-mono font-bold tracking-[0.25em] text-signal-cyan select-all">
+            <div className="text-3xl sm:text-4xl font-mono font-bold tracking-[0.25em] text-signal-cyan select-all drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]">
               {CIPHERTEXT}
             </div>
           </div>
 
           <div className="text-xs font-mono text-signal-dim sm:text-right">
-            <div>ALGORITHM: CAESAR SHIFT</div>
-            <div className="text-[11px] mt-0.5">MODULAR DISPLACEMENT</div>
+            <div className="text-cyan-400/70 font-semibold">ALGORITHM: CAESAR SHIFT</div>
+            <div className="text-[11px] mt-0.5 text-slate-400">MODULAR DISPLACEMENT</div>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@ export const TransmissionRole: React.FC<{ onOpenVault?: () => void }> = () => {
         <div className="flex items-center justify-between pb-3 border-b border-noir-border">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-signal-cyan" />
-            <h3 className="font-display font-bold text-lg text-signal-text tracking-wide">
+            <h3 className="font-display font-bold text-lg text-cyan-300 tracking-wide drop-shadow-[0_0_8px_rgba(34,211,238,0.2)]">
               DECRYPTION OFFSET CONSOLE
             </h3>
           </div>

@@ -58,11 +58,11 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
             </svg>
           </div>
           <div>
-            <div className="text-signal-text font-bold tracking-widest uppercase text-xs">
+            <div className="text-cyan-300 font-extrabold tracking-widest uppercase text-xs drop-shadow-[0_0_8px_rgba(34,211,238,0.25)]">
               SEC-SYS // CLASSIFIED TRANSMISSION RELAY
             </div>
-            <div className="text-[10px] text-signal-dim">
-              CASE: {state.missionId} // CLEARANCE: LEVEL 5
+            <div className="text-[10px] text-cyan-400/70 font-mono">
+              CASE: <span className="text-cyan-300 font-bold">{state.missionId}</span> // CLEARANCE: LEVEL 5
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
 
             <button
               onClick={handleLaunchAllTabs}
-              className="px-5 py-4 rounded border border-noir-border bg-noir-surface hover:bg-noir-elevated text-signal-text font-display font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-colors"
+              className="px-5 py-4 rounded border border-signal-cyan/40 bg-noir-surface hover:bg-noir-elevated text-cyan-300 font-display font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-[0_0_12px_rgba(34,211,238,0.1)] hover:border-signal-cyan"
               title="Opens Transmission, Key, and Anomaly in 3 separate windows"
             >
               <ExternalLink className="w-3.5 h-3.5 text-signal-cyan" />

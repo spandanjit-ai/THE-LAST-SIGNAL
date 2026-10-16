@@ -74,13 +74,20 @@ export const SynchronizedNodeMesh: React.FC = () => {
       {/* Synchronized Circuit Nodes */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 relative">
         {nodes.map((node) => {
+          const titleColor =
+            node.id === 'transmission'
+              ? 'text-cyan-300'
+              : node.id === 'key'
+              ? 'text-purple-300'
+              : 'text-amber-300';
+
           return (
             <button
               key={node.id}
               onClick={() => setRole(node.id)}
               className={`p-3 rounded border text-left transition-all relative flex flex-col justify-between ${
                 node.active
-                  ? 'border-signal-cyan/60 bg-noir-elevated ring-1 ring-signal-cyan/30'
+                  ? 'border-signal-cyan/60 bg-noir-elevated ring-1 ring-signal-cyan/30 shadow-[0_0_12px_rgba(34,211,238,0.15)]'
                   : node.resolved
                   ? `${node.resolvedBg} ${node.resolvedBorder}`
                   : 'border-noir-border bg-noir-base/60 text-signal-muted hover:border-noir-border/80 hover:text-signal-text'
@@ -94,13 +101,17 @@ export const SynchronizedNodeMesh: React.FC = () => {
                   >
                     {node.icon}
                   </span>
-                  <span className="text-[10px] font-mono text-signal-muted tracking-widest uppercase">
+                  <span
+                    className={`text-[10px] font-mono tracking-widest uppercase ${
+                      node.active ? 'text-cyan-400 font-bold' : 'text-signal-muted'
+                    }`}
+                  >
                     {node.number}
                   </span>
                 </div>
 
                 {node.resolved ? (
-                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-signal-cyan">
+                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-signal-cyan drop-shadow-[0_0_6px_rgba(34,211,238,0.4)]">
                     <Check className="w-3 h-3" /> LINKED
                   </span>
                 ) : (
@@ -110,7 +121,7 @@ export const SynchronizedNodeMesh: React.FC = () => {
                 )}
               </div>
 
-              <div className="font-display font-semibold text-xs tracking-wide text-signal-text">
+              <div className={`font-display font-semibold text-xs tracking-wide ${titleColor}`}>
                 {node.label}
               </div>
             </button>
