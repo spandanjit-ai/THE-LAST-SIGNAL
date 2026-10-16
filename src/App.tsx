@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { MissionProvider, useMission } from './hooks/useMission';
 import { BackgroundFX } from './components/common/BackgroundFX';
 import { HeaderNav } from './components/common/HeaderNav';
-import { ClueProgress } from './components/common/ClueProgress';
+import { SignalHero } from './components/common/SignalHero';
+import { EvidenceDossier } from './components/common/EvidenceDossier';
 import { LandingScreen } from './components/landing/LandingScreen';
 import { TransmissionRole } from './components/roles/TransmissionRole';
 import { KeyRole } from './components/roles/KeyRole';
@@ -36,16 +37,16 @@ const MissionApp: React.FC = () => {
     <div className="relative min-h-screen flex flex-col text-slate-100">
       <BackgroundFX />
 
-      {/* Top Navigation */}
+      {/* Top Tactical Navigation */}
       <HeaderNav onOpenVaultModal={() => setShowVaultModal(true)} />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        {/* Clue Progress and Temporal Status */}
-        <ClueProgress />
+      {/* Main Focus Area */}
+      <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+        {/* The Signal Hero: Real-time carrier oscilloscope responding to temporal phase */}
+        <SignalHero compact={true} />
 
-        {/* Role-Specific View */}
-        <section aria-label="Role Mission Content">
+        {/* Primary Puzzle Workspace */}
+        <section aria-label="Active Mission Terminal">
           {currentRole === 'transmission' && (
             <TransmissionRole onOpenVault={() => setShowVaultModal(true)} />
           )}
@@ -58,6 +59,9 @@ const MissionApp: React.FC = () => {
             <AnomalyRole />
           )}
         </section>
+
+        {/* Evidence Dossier & Vault Gate Readiness */}
+        <EvidenceDossier onOpenVault={() => setShowVaultModal(true)} />
       </main>
 
       {/* Vault Reveal Modal */}
@@ -65,9 +69,9 @@ const MissionApp: React.FC = () => {
         <VaultReveal onClose={() => setShowVaultModal(false)} />
       )}
 
-      {/* Footer Status Bar */}
+      {/* Minimal Footer */}
       <footer className="relative z-10 border-t border-slate-800/80 bg-space-950/80 px-4 py-3 text-center text-xs font-mono text-slate-500">
-        THE LAST SIGNAL // CLASSIFIED TRANSMISSION NETWORK // BROADCAST PROTOCOL v1.0
+        THE LAST SIGNAL // CLASSIFIED TRANSMISSION SYSTEM // BROADCAST CHANNEL ACTIVE
       </footer>
     </div>
   );

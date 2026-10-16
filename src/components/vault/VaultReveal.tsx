@@ -36,13 +36,13 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Trigger confetti on unlock
+  // Trigger celebratory confetti on unlock
   useEffect(() => {
     if (state.unlockStatus === 'UNLOCKED') {
       try {
         confetti({
-          particleCount: 100,
-          spread: 80,
+          particleCount: 120,
+          spread: 90,
           origin: { y: 0.6 },
           colors: ['#00f0ff', '#8b5cf6', '#38bdf8', '#10b981'],
         });
@@ -72,19 +72,25 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
     state.keyDiscovered && state.anomalyConfirmed && state.cipherDecoded;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="relative w-full max-w-4xl bg-space-950 border border-cyan-500/40 rounded-xl shadow-2xl overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6">
+      <div
+        className={`relative w-full max-w-4xl bg-space-950 border rounded-xl shadow-2xl overflow-hidden my-auto transition-all duration-700 ${
+          state.unlockStatus === 'UNLOCKED'
+            ? 'border-emerald-500/50 shadow-emerald-500/20'
+            : 'border-slate-800 shadow-cyan-500/10'
+        }`}
+      >
         {/* Subtle scanline overlay */}
-        <div className="absolute inset-0 scanlines opacity-25 pointer-events-none" />
+        <div className="absolute inset-0 scanlines opacity-20 pointer-events-none" />
 
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-cyan-500/30 bg-space-900/80">
+        {/* Modal Top Telemetry Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-space-900/90">
           <div className="flex items-center gap-3">
             <div
-              className={`p-2 rounded-lg border ${
+              className={`p-2 rounded border transition-colors ${
                 state.unlockStatus === 'UNLOCKED'
                   ? 'border-emerald-500/50 bg-emerald-950/60 text-emerald-300'
-                  : 'border-cyan-500/40 bg-cyan-950/60 text-cyan-300'
+                  : 'border-slate-700 bg-space-950 text-slate-400'
               }`}
             >
               {state.unlockStatus === 'UNLOCKED' ? (
@@ -100,7 +106,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                   className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
                     state.unlockStatus === 'UNLOCKED'
                       ? 'border-emerald-500/40 text-emerald-300 bg-emerald-950/40'
-                      : 'border-amber-500/40 text-amber-300 bg-amber-950/40'
+                      : 'border-slate-700 text-slate-400 bg-space-900'
                   }`}
                 >
                   {state.unlockStatus}
@@ -115,7 +121,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleAudio}
-              className="p-1.5 rounded border border-slate-700 hover:border-cyan-500/50 text-slate-400 hover:text-cyan-300 transition-colors"
+              className="p-1.5 rounded border border-slate-800 hover:border-slate-600 text-slate-400 hover:text-cyan-300 transition-colors"
               title={isAudioEnabled ? 'Mute' : 'Enable Audio'}
             >
               <Volume2 className="w-4 h-4" />
@@ -123,7 +129,8 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             {onClose && (
               <button
                 onClick={onClose}
-                className="p-1.5 rounded border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white transition-colors"
+                className="p-1.5 rounded border border-slate-800 hover:border-slate-600 text-slate-400 hover:text-white transition-colors"
+                title="Close"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -131,18 +138,18 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 space-y-6">
-          {/* Animated Concentric Geometric Rings Graphic */}
-          <div className="relative flex items-center justify-center py-6">
+        {/* Modal Main Body */}
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Animated Concentric Mechanical Rings Graphic */}
+          <div className="relative flex items-center justify-center py-4">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               {/* Outer Gear Ring */}
               <svg
-                className={`absolute inset-0 w-full h-full text-cyan-500/30 transition-transform ${
+                className={`absolute inset-0 w-full h-full text-cyan-500/20 transition-all duration-700 ${
                   state.unlockStatus === 'VERIFYING'
-                    ? 'animate-spin'
+                    ? 'animate-spin text-cyan-400/60'
                     : state.unlockStatus === 'UNLOCKED'
-                    ? 'rotate-45'
+                    ? 'rotate-45 text-emerald-400/40 scale-105'
                     : 'animate-spin-slow'
                 }`}
                 viewBox="0 0 200 200"
@@ -166,13 +173,13 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                 />
               </svg>
 
-              {/* Middle Rotating Segmented Ring */}
+              {/* Middle Rotating Iris Ring */}
               <svg
-                className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] text-violet-500/40 transition-transform ${
+                className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] text-violet-500/30 transition-all duration-700 ${
                   state.unlockStatus === 'VERIFYING'
-                    ? 'animate-reverse-spin'
+                    ? 'animate-reverse-spin text-violet-400/60'
                     : state.unlockStatus === 'UNLOCKED'
-                    ? '-rotate-90'
+                    ? '-rotate-90 text-emerald-400/40 scale-110'
                     : 'animate-reverse-spin'
                 }`}
                 viewBox="0 0 200 200"
@@ -190,7 +197,9 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
 
               {/* Inner Optical Reticle */}
               <svg
-                className="absolute inset-8 w-[calc(100%-64px)] h-[calc(100%-64px)] text-cyan-400/50"
+                className={`absolute inset-8 w-[calc(100%-64px)] h-[calc(100%-64px)] transition-all duration-500 ${
+                  state.unlockStatus === 'UNLOCKED' ? 'text-emerald-400/60' : 'text-cyan-400/40'
+                }`}
                 viewBox="0 0 200 200"
               >
                 <circle
@@ -201,50 +210,49 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                   stroke="currentColor"
                   strokeWidth="1.2"
                 />
-                {/* Crosshairs */}
                 <line x1="100" y1="36" x2="100" y2="48" stroke="currentColor" strokeWidth="2" />
                 <line x1="100" y1="152" x2="100" y2="164" stroke="currentColor" strokeWidth="2" />
                 <line x1="36" y1="100" x2="48" y2="100" stroke="currentColor" strokeWidth="2" />
                 <line x1="152" y1="100" x2="164" y2="100" stroke="currentColor" strokeWidth="2" />
               </svg>
 
-              {/* Center Core Reactor / Status Glow */}
+              {/* Central Core Status Reactor */}
               <div
                 className={`relative z-10 w-24 h-24 rounded-full flex flex-col items-center justify-center border transition-all duration-700 ${
                   state.unlockStatus === 'UNLOCKED'
-                    ? 'bg-emerald-950/80 border-emerald-400 shadow-2xl shadow-emerald-500/50 scale-110'
+                    ? 'bg-emerald-950 border-emerald-400 shadow-2xl shadow-emerald-500/40 scale-110'
                     : state.unlockStatus === 'VERIFYING'
-                    ? 'bg-cyan-950/80 border-cyan-400 shadow-2xl shadow-cyan-400/60 animate-pulse'
-                    : 'bg-space-900 border-cyan-500/40'
+                    ? 'bg-cyan-950 border-cyan-400 shadow-2xl shadow-cyan-400/50 animate-pulse'
+                    : 'bg-space-900 border-slate-700'
                 }`}
               >
                 {state.unlockStatus === 'UNLOCKED' ? (
                   <>
                     <Unlock className="w-8 h-8 text-emerald-400 animate-bounce" />
-                    <span className="text-[9px] font-mono font-bold text-emerald-300 mt-1">OPEN</span>
+                    <span className="text-[10px] font-mono font-bold text-emerald-300 mt-1">OPEN</span>
                   </>
                 ) : state.unlockStatus === 'VERIFYING' ? (
                   <>
                     <Sparkles className="w-8 h-8 text-cyan-300 animate-spin" />
-                    <span className="text-[9px] font-mono font-bold text-cyan-300 mt-1">CHECK</span>
+                    <span className="text-[9px] font-mono font-bold text-cyan-300 mt-1">AUTH</span>
                   </>
                 ) : (
                   <>
-                    <Lock className="w-8 h-8 text-cyan-400" />
-                    <span className="text-[9px] font-mono text-slate-400 mt-1">LOCKED</span>
+                    <Lock className="w-8 h-8 text-slate-400" />
+                    <span className="text-[9px] font-mono text-slate-500 mt-1">LOCKED</span>
                   </>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Checklist of Prerequisites */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+          {/* Verification Prerequisites Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
             <div
-              className={`p-2.5 rounded border flex items-center justify-between ${
+              className={`p-3 rounded border flex items-center justify-between ${
                 state.keyDiscovered
                   ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300'
-                  : 'border-slate-800 bg-space-900/60 text-slate-400'
+                  : 'border-slate-800 bg-space-900 text-slate-500'
               }`}
             >
               <span>KEY RECOVERED</span>
@@ -256,10 +264,10 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             </div>
 
             <div
-              className={`p-2.5 rounded border flex items-center justify-between ${
+              className={`p-3 rounded border flex items-center justify-between ${
                 state.anomalyConfirmed
                   ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300'
-                  : 'border-slate-800 bg-space-900/60 text-slate-400'
+                  : 'border-slate-800 bg-space-900 text-slate-500'
               }`}
             >
               <span>DOM ANOMALY</span>
@@ -271,10 +279,10 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             </div>
 
             <div
-              className={`p-2.5 rounded border flex items-center justify-between ${
+              className={`p-3 rounded border flex items-center justify-between ${
                 state.cipherDecoded
                   ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300'
-                  : 'border-slate-800 bg-space-900/60 text-slate-400'
+                  : 'border-slate-800 bg-space-900 text-slate-500'
               }`}
             >
               <span>CIPHER DECODED</span>
@@ -286,13 +294,13 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             </div>
 
             <div
-              className={`p-2.5 rounded border flex items-center justify-between ${
+              className={`p-3 rounded border flex items-center justify-between ${
                 isStable
                   ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300'
                   : 'border-amber-500/40 bg-amber-950/20 text-amber-300'
               }`}
             >
-              <span>TEMPORAL: {state.currentPhase}</span>
+              <span>SIGNAL: {state.currentPhase}</span>
               {isStable ? (
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               ) : (
@@ -301,44 +309,67 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Unlocked State vs Submission Form */}
+          {/* Culmination: Unlocked Transmission Reveal vs Submission Form */}
           {state.unlockStatus === 'UNLOCKED' ? (
-            <div className="p-6 rounded-lg bg-emerald-950/30 border border-emerald-500/50 space-y-4">
-              <div className="flex items-center gap-3 text-emerald-300">
-                <ShieldCheck className="w-6 h-6 text-emerald-400" />
-                <h3 className="font-display font-bold text-lg">
-                  CLASSIFIED TRANSMISSION RECOVERED & VERIFIED
-                </h3>
+            <div className="p-6 sm:p-8 rounded-lg bg-space-900/90 border border-emerald-500/50 space-y-6">
+              <div className="flex items-center gap-3 text-emerald-300 border-b border-emerald-500/20 pb-4">
+                <ShieldCheck className="w-6 h-6 text-emerald-400 flex-shrink-0" />
+                <div>
+                  <h3 className="font-display font-bold text-xl text-white tracking-wider">
+                    DECRYPTED TRANSMISSION ARCHIVE RECOVERED
+                  </h3>
+                  <div className="text-xs font-mono text-emerald-400/80">
+                    CLEARED FOR PLAYBACK // ORIGIN: DEEP SPACE EXPEDITION
+                  </div>
+                </div>
               </div>
 
-              <div className="p-4 rounded bg-space-950 border border-emerald-500/30 font-mono text-sm leading-relaxed text-slate-200">
-                <div className="text-emerald-400 text-xs mb-2">
-                  // DECRYPTED TRANSMISSION STREAM PAYLOAD:
+              {/* The Decrypted Message Card */}
+              <div className="p-6 rounded bg-space-950 border border-slate-800 font-mono space-y-4">
+                <div className="flex items-center justify-between text-xs text-slate-500 border-b border-slate-800/80 pb-2">
+                  <span>PAYLOAD STREAM: 0x88F9_FINAL</span>
+                  <span className="text-emerald-400">STATUS: DECRYPTED</span>
                 </div>
-                <div className="text-xl sm:text-2xl font-bold tracking-widest text-emerald-300 glow-cyan mb-3">
+
+                <div className="text-2xl sm:text-3xl font-display font-extrabold tracking-widest text-emerald-300">
                   &quot;THE LAST SIGNAL&quot;
                 </div>
-                <TerminalText
-                  text="To all exploratory vessels on standard frequency: Planetary core stabilization sequence has commenced. Temporal harmonics aligned. The archive is secured for future transmissions."
-                  speed={20}
-                  className="text-slate-300"
-                />
+
+                <div className="text-sm leading-relaxed text-slate-300 italic pt-2">
+                  <TerminalText
+                    text="To all listening exploratory vessels across the quadrant: The anomaly has stabilized. The carrier network has held. The archive is secured for all future transmissions. Transmission sequence complete."
+                    speed={18}
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs text-slate-400 pt-2 border-t border-emerald-500/20">
-                <div>MISSION: <span className="text-white">{state.missionId}</span></div>
-                <div>STATUS: <span className="text-emerald-400 font-bold">UNLOCKED</span></div>
-                <div>REVISION: <span className="text-white">{state.revision}</span></div>
-                <div>DIGEST: <span className="text-cyan-300 font-bold">SHA-256 VERIFIED</span></div>
+              {/* Mission Summary Debrief */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs text-slate-400 pt-3 border-t border-slate-800">
+                <div className="p-2.5 rounded bg-space-950 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] uppercase">MISSION SESSION</div>
+                  <div className="text-white font-bold">{state.missionId}</div>
+                </div>
+                <div className="p-2.5 rounded bg-space-950 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] uppercase">SECURITY STATUS</div>
+                  <div className="text-emerald-400 font-bold">UNLOCKED</div>
+                </div>
+                <div className="p-2.5 rounded bg-space-950 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] uppercase">CROSS-TAB SYNC</div>
+                  <div className="text-cyan-300 font-bold">BROADCAST ACTIVE</div>
+                </div>
+                <div className="p-2.5 rounded bg-space-950 border border-slate-800">
+                  <div className="text-slate-500 text-[10px] uppercase">DIGEST VERIFICATION</div>
+                  <div className="text-violet-300 font-bold">SHA-256 MATCH</div>
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2 font-mono text-xs">
                 <button
                   onClick={() => resetMission()}
-                  className="px-4 py-2 rounded border border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 rounded border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors flex items-center gap-2"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  RESTART TRANSMISSION PROTOCOL
+                  RESTART MISSION PROTOCOL
                 </button>
               </div>
             </div>
@@ -346,21 +377,21 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
-                  htmlFor="vault-passphrase-input"
+                  htmlFor="vault-input"
                   className="block text-xs font-mono text-slate-300 mb-2 flex items-center justify-between"
                 >
-                  <span>SUBMIT DECODED TRANSMISSION PHRASE:</span>
+                  <span>SUBMIT DECRYPTED TRANSMISSION PASSPHRASE:</span>
                   <span className="text-slate-500">FORMAT: &quot;THE LAST SIGNAL&quot;</span>
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
-                    id="vault-passphrase-input"
+                    id="vault-input"
                     type="text"
                     placeholder="Enter decrypted message..."
                     value={inputAnswer}
                     onChange={(e) => setInputAnswer(e.target.value)}
                     disabled={isSubmitting}
-                    className="flex-1 px-4 py-3 rounded bg-space-950 border border-slate-700 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-white font-mono text-sm tracking-widest uppercase outline-none transition-all"
+                    className="flex-1 px-4 py-3 rounded bg-space-950 border border-slate-800 focus:border-cyan-400 text-white font-mono text-sm tracking-widest uppercase outline-none transition-all"
                   />
                   <button
                     type="submit"
@@ -368,13 +399,13 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                     className={`px-6 py-3 rounded font-display font-bold text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-2 ${
                       isStable && hasAllPrerequisites
                         ? 'bg-cyan-500 hover:bg-cyan-400 text-space-950 shadow-lg shadow-cyan-500/30'
-                        : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                        : 'bg-space-900 border border-slate-700 text-slate-400'
                     }`}
                   >
                     {isSubmitting ? (
                       <>
                         <Sparkles className="w-4 h-4 animate-spin" />
-                        VERIFYING HARMONICS...
+                        AUTHENTICATING DIGEST...
                       </>
                     ) : (
                       <>
@@ -386,9 +417,9 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                 </div>
               </div>
 
-              {/* Status or Error Notifications */}
+              {/* Error Alert */}
               {(errorMessage || state.error) && (
-                <div className="p-3.5 rounded bg-rose-950/60 border border-rose-500/40 text-xs font-mono text-rose-300 flex items-start justify-between gap-3">
+                <div className="p-3.5 rounded bg-rose-950/40 border border-rose-500/40 text-xs font-mono text-rose-300 flex items-start justify-between gap-3">
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
                     <div>
@@ -409,31 +440,33 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                 </div>
               )}
 
-              {/* Contextual Hints */}
-              <div className="p-3 rounded bg-space-900 border border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+              {/* Real-time Guidance Banner */}
+              <div className="p-3 rounded bg-space-900 border border-slate-800 text-xs font-mono text-slate-400 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Clock className="w-3.5 h-3.5 text-cyan-400" />
                   <span>
-                    Temporal Gate:{' '}
+                    Temporal Lock:{' '}
                     {isStable ? (
                       <span className="text-emerald-400 font-bold">
-                        STABLE RESONANCE ACTIVE [{state.phaseSecondsRemaining}s remaining]
+                        STABLE RESONANCE ACTIVE [{state.phaseSecondsRemaining}s window]
                       </span>
                     ) : (
                       <span className="text-amber-400">
-                        Signal in {state.currentPhase} phase. Wait for STABLE window ({state.phaseSecondsRemaining}s).
+                        {state.currentPhase} phase. Wait for STABLE window ({state.phaseSecondsRemaining}s).
                       </span>
                     )}
                   </span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setInputAnswer('THE LAST SIGNAL')}
-                  className="text-[11px] text-cyan-400 hover:underline"
-                >
-                  Autofill decoded
-                </button>
+                {state.cipherDecoded && (
+                  <button
+                    type="button"
+                    onClick={() => setInputAnswer('THE LAST SIGNAL')}
+                    className="text-[11px] text-cyan-400 hover:underline"
+                  >
+                    Autofill &quot;THE LAST SIGNAL&quot;
+                  </button>
+                )}
               </div>
             </form>
           )}
