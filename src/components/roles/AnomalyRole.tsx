@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useMission } from '../../hooks/useMission';
 import {
   CONTAINMENT_ELEMENT_ID,
@@ -9,33 +9,25 @@ import {
 } from '../../engine/challengeObserver';
 import { ANOMALY_CODE } from '../../engine/verification';
 import {
-  Binary,
-  Code2,
-  CheckCircle2,
-  AlertTriangle,
   ShieldAlert,
   ShieldCheck,
-  Zap,
-  Activity,
   Terminal,
+  Radio,
+  Zap,
 } from 'lucide-react';
-
 
 export const AnomalyRole: React.FC = () => {
   const { state, completeChallenge, confirmAnomaly } = useMission();
   const containmentNodeRef = useRef<HTMLDivElement>(null);
-  const [mutationFeedback, setMutationFeedback] = useState<string | null>(null);
 
   const c1Status = state.challenges?.items?.C1?.status;
   const isC1Completed = c1Status === 'COMPLETED';
-  const isAnomalyConfirmed = state.anomalyConfirmed || isC1Completed;
 
-  // Real, observable DOM-Mutation puzzle
+  // Real DOM Mutation Observer
   useEffect(() => {
     const el = containmentNodeRef.current;
     if (!el) return;
 
-    // React rerender safety: Uncontrolled DOM attribute management
     if (!el.hasAttribute(CONTAINMENT_ATTRIBUTE)) {
       el.setAttribute(
         CONTAINMENT_ATTRIBUTE,
@@ -43,200 +35,176 @@ export const AnomalyRole: React.FC = () => {
       );
     }
 
-    // Attach strict MutationObserver directly to the designated target node
     const cleanup = attachContainmentObserver({
       targetElement: el,
       onValidMutation: (attribute, value) => {
-        setMutationFeedback(`VALID MUTATION DETECTED: [${attribute}="${value}"]. Initiating containment override...`);
         completeChallenge('C1', attribute, value);
         confirmAnomaly(ANOMALY_CODE);
       },
-      onInvalidMutation: (attribute, value) => {
-        setMutationFeedback(
-          `MUTATION REJECTED: [${attribute}="${value}"]. Required protocol value is "${CONTAINMENT_TARGET_VALUE}".`
-        );
-      },
     });
 
-    return () => {
-      cleanup();
-    };
+    return () => cleanup();
   }, [isC1Completed, completeChallenge, confirmAnomaly]);
 
+
   return (
-    <div className="space-y-6">
-      {/* Top Telemetry Header */}
-      <div className="border border-noir-border bg-noir-surface/90 rounded p-5 sm:p-6 backdrop-blur-md">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-noir-border">
+    <div className="space-y-6 font-mono">
+      {/* Telemetry Header */}
+      <div className="border border-noir-border/80 bg-noir-surface/90 rounded p-4 sm:p-5 backdrop-blur-md">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div
-              className={`p-2 rounded border ${
+              className={`p-2 rounded border transition-colors ${
                 isC1Completed
                   ? 'bg-signal-cyan/15 border-signal-cyan/40 text-signal-cyan'
-                  : 'bg-noir-base border-signal-amber/30 text-signal-amber'
+                  : 'bg-signal-amber/15 border-signal-amber/40 text-signal-amber'
               }`}
             >
-              {isC1Completed ? <Zap className="w-5 h-5" /> : <Binary className="w-5 h-5" />}
+              {isC1Completed ? <Zap className="w-5 h-5" /> : <Radio className="w-5 h-5" />}
             </div>
             <div>
-              <div className="text-[10px] font-mono text-signal-amber uppercase tracking-widest">
-                TRACK OMEGA // CHALLENGE 01
+              <div className="text-[10px] text-signal-muted uppercase tracking-widest">
+                SECTOR 0x7749 // ANOMALY TELEMETRY
               </div>
               <h2 className="font-display font-bold text-xl text-signal-text tracking-tight">
-                CONTAINMENT TELEMETRY &amp; ANOMALY NODE
+                CONTAINMENT ISOLATOR
               </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs">
+          <div className="flex items-center gap-2 text-xs">
             {isC1Completed ? (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#22D3EE]/15 border border-[#22D3EE]/40 text-signal-cyan">
-                <ShieldCheck className="w-3.5 h-3.5 text-signal-cyan" />
-                PROTOCOL OVERRIDDEN &amp; SYNCED
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-cyan/15 border border-signal-cyan/40 text-signal-cyan font-bold">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                OVERRIDE VERIFIED
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-noir-base border border-noir-border text-signal-amber animate-pulse">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber animate-pulse">
                 <ShieldAlert className="w-3.5 h-3.5" />
-                CONTAINMENT RESTRICTED
+                QUARANTINE ACTIVE
               </span>
             )}
           </div>
         </div>
-
-        <p className="text-xs font-mono text-signal-muted leading-relaxed max-w-3xl">
-          Deep diagnostic telemetry reports an isolated carrier packet locked under strict protocol containment.
-          The transmission origin remains classified until security parameters are overridden.
-        </p>
       </div>
 
-      {/* Unsettling Containment Warning & Indirect Clue */}
-      <div
-        className={`p-4 sm:p-5 rounded border transition-all ${
-          isC1Completed
-            ? 'bg-noir-surface border-signal-cyan/30'
-            : 'bg-signal-amber/5 border-signal-amber/30'
-        }`}
-      >
-        <div className="flex items-center gap-2 font-mono text-xs font-bold text-signal-amber mb-2">
-          <AlertTriangle className="w-4 h-4 text-signal-amber" />
-          <span>SECURITY DIRECTIVE // CONTAINMENT ENFORCEMENT</span>
-        </div>
-        <p className="text-xs font-mono text-signal-text leading-relaxed">
-          {isC1Completed ? (
-            <span className="text-signal-cyan">
-              Containment locks have been breached. Security protocols disengaged across all linked browser terminals.
-            </span>
-          ) : (
-            <span>
-              NOTICE: The carrier anomaly in sector 0x7749 is quarantined. Interface controls cannot alter this state.
-              Only manual tampering with the DOM attribute <code className="text-signal-cyan px-1 py-0.5 rounded bg-noir-base border border-noir-border">{CONTAINMENT_ATTRIBUTE}</code> via browser DevTools to the security command <code className="text-signal-amber px-1 py-0.5 rounded bg-noir-base border border-noir-border font-bold">&quot;{CONTAINMENT_TARGET_VALUE}&quot;</code> will bypass the quarantine.
-            </span>
-          )}
-        </p>
-      </div>
-
-      {/* DESIGNATED DOM-MUTATION TARGET ELEMENT */}
+      {/* Primary Visual: Containment Isolator Chamber */}
       <div
         id={CONTAINMENT_ELEMENT_ID}
         ref={containmentNodeRef}
         data-signal-anomaly={ANOMALY_CODE}
-        className={`relative p-5 sm:p-6 rounded border transition-all ${
+        className={`relative rounded border p-8 sm:p-12 overflow-hidden transition-all duration-700 flex flex-col items-center justify-center text-center min-h-[380px] ${
           isC1Completed
-            ? 'border-signal-cyan/50 bg-signal-cyan/5 shadow-[0_0_25px_rgba(34,211,238,0.1)]'
-            : 'border-dashed border-signal-amber/50 bg-noir-surface/90 hover:border-signal-amber'
+            ? 'border-signal-cyan/50 bg-gradient-to-b from-signal-cyan/10 via-noir-surface to-noir-base shadow-[0_0_50px_rgba(34,211,238,0.12)]'
+            : 'border-signal-amber/30 bg-noir-surface/90 hover:border-signal-amber/50 shadow-[0_0_30px_rgba(255,180,84,0.05)]'
         }`}
       >
-        <div className="flex flex-wrap items-center justify-between text-xs font-mono mb-3 gap-2">
-          <span className="text-signal-amber font-bold flex items-center gap-2">
-            <Code2 className="w-4 h-4" />
-            DESIGNATED MUTATION NODE [ID: #{CONTAINMENT_ELEMENT_ID}]
-          </span>
-          <span className="text-[10px] text-signal-dim font-mono">
-            TAG: &lt;div id=&quot;{CONTAINMENT_ELEMENT_ID}&quot; {CONTAINMENT_ATTRIBUTE}=&quot;...&quot;&gt;
-          </span>
+        {/* Radar & Forcefield Grid Overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:24px_24px]" />
+
+        {/* Pulsing Concentric Forcefield Rings */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div
+            className={`w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-dashed transition-all duration-1000 ${
+              isC1Completed
+                ? 'border-signal-cyan/30 animate-[spin_40s_linear_infinite]'
+                : 'border-signal-amber/20 animate-[spin_60s_linear_infinite]'
+            }`}
+          />
+          <div
+            className={`absolute w-48 h-48 sm:w-64 sm:h-64 rounded-full border transition-all duration-700 ${
+              isC1Completed
+                ? 'border-signal-cyan/40 shadow-[0_0_30px_rgba(34,211,238,0.15)]'
+                : 'border-signal-amber/30 animate-pulse'
+            }`}
+          />
         </div>
 
-        {/* Live DevTools Status Telemetry */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs mb-4">
-          <div className="p-3 rounded bg-noir-base border border-noir-border">
-            <div className="text-[10px] text-signal-dim uppercase">TARGET ID</div>
-            <div className="text-signal-text font-bold mt-1">#{CONTAINMENT_ELEMENT_ID}</div>
-          </div>
-          <div className="p-3 rounded bg-noir-base border border-noir-border">
-            <div className="text-[10px] text-signal-dim uppercase">SECURITY ATTRIBUTE</div>
-            <div className="text-signal-cyan font-bold mt-1">{CONTAINMENT_ATTRIBUTE}</div>
-          </div>
-          <div className="p-3 rounded bg-noir-base border border-noir-border">
-            <div className="text-[10px] text-signal-dim uppercase">STATE</div>
-            <div
-              className={`font-bold mt-1 ${
-                isC1Completed ? 'text-signal-cyan' : 'text-signal-amber animate-pulse'
-              }`}
-            >
-              {isC1Completed ? 'OVERRIDE [BREACHED]' : 'RESTRICTED [LOCKED]'}
+        {/* Center Node Core */}
+        <div className="relative z-10 max-w-xl mx-auto space-y-6">
+          {!isC1Completed ? (
+            <>
+              {/* Core Icon */}
+              <div className="w-16 h-16 mx-auto rounded-full bg-noir-base border border-signal-amber/40 flex items-center justify-center text-signal-amber shadow-[0_0_20px_rgba(255,180,84,0.2)]">
+                <ShieldAlert className="w-8 h-8 animate-pulse" />
+              </div>
+
+              {/* Status Header */}
+              <div className="space-y-1">
+                <div className="text-[10px] text-signal-amber tracking-widest uppercase">
+                  CONTAINMENT PROTOCOL RESTRICTED
+                </div>
+                <div className="font-display font-bold text-2xl sm:text-3xl text-signal-text tracking-wide">
+                  ISOLATOR NODE #0x7749
+                </div>
+              </div>
+
+              {/* Minimal Tactical Metadata */}
+              <div className="p-3.5 rounded bg-noir-base/80 border border-noir-border/80 inline-flex flex-wrap items-center justify-center gap-4 text-xs text-signal-dim">
+                <div>
+                  NODE: <span className="text-signal-text font-bold">#{CONTAINMENT_ELEMENT_ID}</span>
+                </div>
+                <div className="text-noir-border">//</div>
+                <div>
+                  PROTOCOL: <span className="text-signal-amber font-bold">&quot;RESTRICTED&quot;</span>
+                </div>
+              </div>
+
+              {/* Single Atmospheric Hacker Directive */}
+              <p className="text-xs text-signal-muted max-w-md mx-auto leading-relaxed">
+                Quarantine locks isolate this carrier packet. Inspect this DOM node in DevTools and mutate{' '}
+                <code className="text-signal-cyan px-1 py-0.5 rounded bg-noir-base border border-noir-border">
+                  {CONTAINMENT_ATTRIBUTE}
+                </code>{' '}
+                to <span className="text-signal-amber font-bold">&quot;OVERRIDE&quot;</span> to disengage containment.
+              </p>
+            </>
+          ) : (
+            /* CINEMATIC PLOT TWIST REVELATION */
+            <div className={`space-y-5 animate-in fade-in zoom-in-95 duration-500`}>
+              <div className="w-16 h-16 mx-auto rounded-full bg-signal-cyan/15 border border-signal-cyan flex items-center justify-center text-signal-cyan shadow-[0_0_30px_rgba(34,211,238,0.4)]">
+                <Zap className="w-8 h-8" />
+              </div>
+
+              <div className="space-y-1">
+                <div className="text-xs text-signal-cyan font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-signal-cyan animate-ping" />
+                  CONTAINMENT OVERRIDDEN // PLOT TWIST UNLOCKED
+                </div>
+                <div className="font-display font-extrabold text-2xl sm:text-3xl text-signal-text tracking-tight">
+                  THE TRANSMISSION IS INTERNAL
+                </div>
+              </div>
+
+              <div className="p-4 rounded bg-noir-base/90 border border-signal-cyan/40 text-xs sm:text-sm text-signal-text leading-relaxed text-left max-w-lg mx-auto shadow-xl">
+                <div className="text-[10px] text-signal-cyan font-bold tracking-widest mb-1.5">
+                  // DECRYPTED FLIGHT RECORDER LOG:
+                </div>
+                The anomaly is not an alien carrier. It is an automated evacuation beacon transmitted by this very machine prior to system shutdown.
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-signal-dim pt-1">
+                <div>
+                  CARRIER TOKEN: <span className="text-signal-amber font-bold tracking-wider">{ANOMALY_CODE}</span>
+                </div>
+                <div className="text-noir-border">//</div>
+                <div className="text-signal-cyan">
+                  SYNCHRONIZED ACROSS ALL 3 TERMINALS
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-
-        {/* DevTools Instruction Clue */}
-        {!isC1Completed ? (
-          <div className="space-y-3">
-            <p className="text-xs font-mono text-signal-text leading-relaxed">
-              To trigger the Plot Twist and override containment:
-            </p>
-            <ol className="list-decimal list-inside text-xs font-mono text-signal-muted space-y-1.5 pl-1">
-              <li>
-                Open DevTools (<kbd className="px-1.5 py-0.5 rounded bg-noir-base border border-noir-border text-signal-text">F12</kbd> or <kbd className="px-1.5 py-0.5 rounded bg-noir-base border border-noir-border text-signal-text">Cmd+Option+I</kbd>).
-              </li>
-              <li>
-                Inspect this element (<code className="text-signal-amber font-bold">#{CONTAINMENT_ELEMENT_ID}</code>).
-              </li>
-              <li>
-                Change attribute <code className="text-signal-cyan">{CONTAINMENT_ATTRIBUTE}</code> from <code className="text-signal-dim">&quot;{CONTAINMENT_INITIAL_VALUE}&quot;</code> to <code className="text-signal-amber font-bold">&quot;{CONTAINMENT_TARGET_VALUE}&quot;</code>.
-              </li>
-            </ol>
-          </div>
-        ) : (
-          /* CINEMATIC PLOT TWIST REVEAL */
-          <div className="p-4 sm:p-5 rounded bg-noir-base border border-signal-cyan/40 space-y-3">
-            <div className="flex items-center gap-2 text-signal-cyan font-display font-bold text-sm tracking-wide">
-              <CheckCircle2 className="w-4 h-4 text-signal-cyan" />
-              <span>MUTATION VERIFIED // PLOT TWIST UNLOCKED</span>
-            </div>
-            <div className="text-xs font-mono text-signal-text leading-relaxed bg-signal-cyan/10 p-3 rounded border border-signal-cyan/20">
-              <span className="text-signal-cyan font-bold block mb-1">
-                // CLASSIFIED TRANSMISSION LOG:
-              </span>
-              THE ANOMALY IS NOT AN EXTERNAL CARRIER. IT IS COMING FROM WITHIN OUR OWN TERMINAL NETWORK.
-              WE WERE NEVER LISTENING TO AN ALIEN SIGNAL — WE WERE RECOVERING AN AUTOMATED EVACUATION ORDER TRANSMITTED BY THIS VERY MACHINE BEFORE COLLAPSE.
-            </div>
-            <div className="flex flex-wrap items-center justify-between text-[11px] font-mono text-signal-dim pt-1">
-              <span>AUTHENTICATED TOKEN: <strong className="text-signal-amber font-bold">{ANOMALY_CODE}</strong></span>
-              <span className="text-signal-cyan">ALL 3 TERMINALS SYNCHRONIZED</span>
-            </div>
-          </div>
-        )}
-
-        {/* Live Mutation Observer Log */}
-        {mutationFeedback && (
-          <div className="mt-4 p-2.5 rounded bg-noir-base border border-noir-border text-[11px] font-mono text-signal-dim flex items-center gap-2">
-            <Terminal className="w-3.5 h-3.5 text-signal-cyan flex-shrink-0" />
-            <span>OBSERVER: {mutationFeedback}</span>
-          </div>
-        )}
       </div>
 
-      {/* System Status Summary */}
-      <div className="border border-noir-border bg-noir-surface/90 rounded p-4 sm:p-5 backdrop-blur-md flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
-        <div className="flex items-center gap-3">
-          <Activity className="w-4 h-4 text-signal-cyan" />
-          <span className="text-signal-dim">CROSS-TAB CARRIER STATUS:</span>
-          <span className={isAnomalyConfirmed ? 'text-signal-cyan font-bold' : 'text-signal-amber font-bold'}>
-            {isAnomalyConfirmed ? 'ANOMALY NODE VERIFIED &amp; LOCKED' : 'AWAITING PROTOCOL OVERRIDE'}
-          </span>
+      {/* Compact Terminal Readout */}
+      <div className="border border-noir-border/80 bg-noir-surface/70 rounded px-4 py-3 flex items-center justify-between text-xs text-signal-dim">
+        <div className="flex items-center gap-2">
+          <Terminal className="w-4 h-4 text-signal-cyan" />
+          <span>SCOPED DOM OBSERVER ACTIVE</span>
         </div>
-        <div className="text-[11px] text-signal-dim">
-          OBSERVER: ACTIVE (SCOPED ATTRIBUTE OBSERVER)
+        <div className="text-[11px] text-signal-muted">
+          TARGET: #{CONTAINMENT_ELEMENT_ID}
         </div>
       </div>
     </div>

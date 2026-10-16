@@ -2,7 +2,6 @@ import React from 'react';
 import { useMission } from '../../hooks/useMission';
 import { MissionRole } from '../../engine/missionTypes';
 import { SignalHero } from '../common/SignalHero';
-import { ChallengeBoard } from '../challenges/ChallengeBoard';
 import {
   ArrowRight,
   ExternalLink,
@@ -62,9 +61,14 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) 
           </div>
         </div>
 
-        <div className="flex items-center gap-5 text-xs font-mono">
+        <div className="flex items-center gap-4 text-xs font-mono">
+          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber text-[10px] tracking-widest font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-signal-amber animate-pulse" />
+            TRACK OMEGA // PHASE 01
+          </div>
+
           <div className="text-signal-muted">
-            TERMINALS LINKED: <span className="text-signal-cyan font-bold">{connectedTabs}</span>
+            TERMINALS: <span className="text-signal-cyan font-bold">{connectedTabs}</span>
           </div>
 
           <button
@@ -144,11 +148,6 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) 
               <span>LAUNCH 3 WINDOWS</span>
             </button>
           </div>
-        </div>
-
-        {/* Phase 01 Override Hackathon Challenge Board */}
-        <div className="pt-6">
-          <ChallengeBoard defaultExpanded={false} />
         </div>
       </div>
 

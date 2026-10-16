@@ -62,7 +62,7 @@ const MissionApp: React.FC = () => {
         <SynchronizedNodeMesh />
 
         {/* Hackathon Evaluation: Surprise Challenge System (Track Omega) */}
-        <ChallengeBoard defaultExpanded={true} />
+        <ChallengeBoard defaultExpanded={false} />
 
         {/* Primary Puzzle Workspace */}
         <section aria-label="Active Mission Terminal">
