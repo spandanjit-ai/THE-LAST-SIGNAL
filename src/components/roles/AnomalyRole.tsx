@@ -78,31 +78,31 @@ export const AnomalyRole: React.FC = () => {
   return (
     <div className="space-y-6 font-mono">
       {/* 1. Anomaly Banner */}
-      <div className="bg-space-900 border border-amber/30 rounded-lg p-5 relative overflow-hidden">
-        <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-amber/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="bg-space-900 border border-amber/40 rounded-lg p-5 relative overflow-hidden shadow-lg shadow-amber/5">
+        <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-amber/15 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-2">
           <div>
-            <div className="flex items-center gap-2 text-amber text-xs font-bold tracking-widest uppercase mb-1">
-              <Search className="w-4 h-4" /> METADATA ANOMALY DETECTOR
+            <div className="flex items-center gap-2 text-amber text-xs font-black tracking-widest uppercase mb-1 text-glow-amber">
+              <Search className="w-4 h-4 text-amber" /> METADATA ANOMALY DETECTOR
             </div>
-            <h2 className="font-display font-black text-xl md:text-2xl text-slate-100 tracking-wider">
+            <h2 className="font-display font-black text-xl md:text-2xl text-white tracking-wider">
               DOM INSPECTION CHAMBER
             </h2>
           </div>
 
           <div
-            className={`px-3 py-1 rounded text-xs font-mono border ${
+            className={`px-3 py-1 rounded text-xs font-mono font-bold border ${
               isAnomalyConfirmed || isC1Completed
-                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold'
-                : 'bg-amber/10 border-amber/40 text-amber'
+                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 text-glow-emerald font-black'
+                : 'bg-amber/15 border-amber/50 text-amber font-bold text-glow-amber'
             }`}
           >
             ANOMALY: {isAnomalyConfirmed || isC1Completed ? 'VERIFIED & LINKED' : 'UNCONFIRMED SIGNATURE'}
           </div>
         </div>
 
-        <p className="text-slate-400 text-xs leading-relaxed max-w-3xl font-sans">
+        <p className="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-3xl font-sans">
           A corrupted packet embedded in this page&apos;s Document Object Model (DOM) contains hidden telemetry metadata required for vault verification.
         </p>
       </div>
@@ -111,20 +111,20 @@ export const AnomalyRole: React.FC = () => {
       <div className="bg-space-900 border border-slate-800 rounded-lg p-5">
         <div className="flex items-center gap-2 mb-3">
           <Code className="w-4 h-4 text-amber" />
-          <h3 className="font-display font-bold text-base text-slate-200">
+          <h3 className="font-display font-black text-base text-white">
             BROWSER DEVTOOLS INSTRUCTIONS
           </h3>
         </div>
 
-        <div className="bg-space-950 p-4 rounded-lg border border-slate-800 space-y-2 mb-5 text-xs text-slate-300 font-sans">
+        <div className="bg-space-950 p-4 rounded-lg border border-slate-800 space-y-2.5 mb-5 text-xs sm:text-sm text-slate-200 font-sans leading-relaxed">
           <p>
             1. Open Developer Tools by pressing{' '}
-            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">F12</kbd> (or{' '}
-            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">Ctrl + Shift + I</kbd> /{' '}
-            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">Cmd + Option + I</kbd>).
+            <kbd className="px-2 py-0.5 rounded bg-space-900 border border-cyan/40 font-mono text-cyan font-bold text-glow-cyan">F12</kbd> (or{' '}
+            <kbd className="px-2 py-0.5 rounded bg-space-900 border border-cyan/40 font-mono text-cyan font-bold">Ctrl + Shift + I</kbd> /{' '}
+            <kbd className="px-2 py-0.5 rounded bg-space-900 border border-cyan/40 font-mono text-cyan font-bold">Cmd + Option + I</kbd>).
           </p>
           <p>
-            2. Go to the <strong>Elements</strong> / <strong>Inspector</strong> panel.
+            2. Go to the <strong className="text-white">Elements</strong> / <strong className="text-white">Inspector</strong> panel.
           </p>
           <p>
             3. Locate the target DOM elements below to extract the token, or override the containment protocol in real time.
@@ -133,9 +133,9 @@ export const AnomalyRole: React.FC = () => {
 
         {/* Surprise Challenge C1: Containment Isolator Node with Supernova Canvas */}
         <div className="mb-6">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
-            <span>CONTAINMENT ISOLATOR CHAMBER (TRACK OMEGA CHALLENGE C1):</span>
-            <span className={isC1Completed ? 'text-cyan font-bold' : 'text-amber font-semibold'}>
+          <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <span className="text-white font-extrabold">CONTAINMENT ISOLATOR CHAMBER (TRACK OMEGA CHALLENGE C1):</span>
+            <span className={isC1Completed ? 'text-cyan-300 font-black text-glow-cyan' : 'text-amber-300 font-black text-glow-amber'}>
               {isC1Completed ? 'BREACH PROTOCOL OVERRIDDEN' : 'MUTATE ATTRIBUTE TO "OVERRIDE"'}
             </span>
           </div>
@@ -148,42 +148,42 @@ export const AnomalyRole: React.FC = () => {
             data-transmission-anomaly={ANOMALY_CODE}
             className={`relative p-6 rounded-lg border transition-all duration-700 overflow-hidden text-center ${
               isC1Completed
-                ? 'border-cyan/50 bg-space-950 shadow-[0_0_30px_rgba(0,240,255,0.15)]'
-                : 'border-dashed border-amber/40 bg-space-950 hover:border-amber'
+                ? 'border-cyan/60 bg-space-950 shadow-[0_0_40px_rgba(0,240,255,0.2)]'
+                : 'border-dashed border-amber/50 bg-space-950 hover:border-amber'
             }`}
           >
             {/* Supernova Singular Canvas on Breach */}
             {isC1Completed && (
-              <SupernovaCanvas active={true} className="z-0 opacity-75" />
+              <SupernovaCanvas active={true} className="z-0 opacity-80" />
             )}
 
             <div className="relative z-10 space-y-3">
-              <div className="flex items-center justify-center gap-2 text-xs font-bold">
+              <div className="flex items-center justify-center gap-2 text-xs font-black">
                 {isC1Completed ? (
-                  <span className="text-cyan flex items-center gap-1.5 font-bold">
+                  <span className="text-cyan flex items-center gap-2 text-glow-cyan text-sm">
                     <Zap className="w-4 h-4 text-cyan animate-bounce" />
                     &lt;div id=&quot;{CONTAINMENT_ELEMENT_ID}&quot; data-containment-protocol=&quot;OVERRIDE&quot;&gt;
                   </span>
                 ) : (
-                  <span className="text-amber flex items-center gap-1.5">
+                  <span className="text-amber flex items-center gap-2 text-glow-amber text-sm">
                     <ShieldAlert className="w-4 h-4 text-amber animate-pulse" />
                     &lt;div id=&quot;{CONTAINMENT_ELEMENT_ID}&quot; data-containment-protocol=&quot;RESTRICTED&quot;&gt;
                   </span>
                 )}
               </div>
 
-              <p className="text-xs text-slate-400 max-w-lg mx-auto font-sans">
+              <p className="text-xs sm:text-sm text-slate-200 max-w-lg mx-auto font-sans leading-relaxed">
                 {isC1Completed ? (
-                  <span className="text-cyan font-semibold">
+                  <span className="text-cyan-300 font-bold text-glow-cyan">
                     SURPRISE CHALLENGE C1 SOLVED: Live DOM mutation detected! Containment disengaged, Supernova cosmic singularity triggered, and Anomaly token verified.
                   </span>
                 ) : (
                   <span>
                     Inspect this element in DevTools. Mutate attribute{' '}
-                    <code className="text-cyan font-bold px-1 py-0.5 rounded bg-space-900 border border-slate-700">
+                    <code className="text-cyan font-black px-1.5 py-0.5 rounded bg-space-900 border border-cyan/40 text-glow-cyan">
                       {CONTAINMENT_ATTRIBUTE}
                     </code>{' '}
-                    from &quot;RESTRICTED&quot; to <strong className="text-amber">&quot;OVERRIDE&quot;</strong> to disengage containment.
+                    from &quot;RESTRICTED&quot; to <strong className="text-amber-300 font-black text-glow-amber">&quot;OVERRIDE&quot;</strong> to disengage containment.
                   </span>
                 )}
               </p>
@@ -193,9 +193,9 @@ export const AnomalyRole: React.FC = () => {
 
         {/* Standard Anomaly Node: #anomaly-node */}
         <div className="mb-6">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
-            <span>TELEMETRY METADATA NODE:</span>
-            <span className="text-amber">INSPECT THIS ELEMENT IN DEVTOOLS</span>
+          <div className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <span className="text-white font-extrabold">TELEMETRY METADATA NODE:</span>
+            <span className="text-amber-300 font-bold">INSPECT IN DEVTOOLS</span>
           </div>
 
           <div
@@ -203,37 +203,38 @@ export const AnomalyRole: React.FC = () => {
             data-transmission-anomaly={ANOMALY_CODE}
             data-transmission-origin="DEEP_SPACE_ARRAY_7"
             data-protocol-version="TLS-OMEGA-1.0"
-            className="p-4 rounded-lg bg-space-950 border border-slate-800 font-mono text-xs text-slate-400 select-all hover:border-amber transition-colors"
+            className="p-4 rounded-lg bg-space-950 border border-slate-800 font-mono text-xs text-slate-300 select-all hover:border-amber transition-colors"
           >
-            <div className="flex items-center gap-2 text-amber text-[11px] font-bold mb-1">
-              <ShieldAlert className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 text-amber text-xs font-black mb-1 text-glow-amber">
+              <ShieldAlert className="w-4 h-4" />
               <span>&lt;div id=&quot;anomaly-node&quot; data-transmission-anomaly=&quot;{isAnomalyConfirmed ? ANOMALY_CODE : '...'}&quot;&gt;</span>
             </div>
-            <div className="text-[11px] text-slate-400">
-              [SYSTEM NOTE: Inspect DOM attributes to extract the anomaly authorization token: <span className="text-cyan font-bold">{ANOMALY_CODE}</span>]
+            <div className="text-xs text-slate-300 font-semibold">
+              [SYSTEM NOTE: Inspect DOM attributes to extract the anomaly authorization token:{' '}
+              <span className="text-cyan font-black text-glow-cyan">{ANOMALY_CODE}</span>]
             </div>
           </div>
         </div>
 
         {/* Confirmation Form */}
         <div className="border-t border-slate-800 pt-5">
-          <h4 className="font-display font-bold text-sm text-slate-200 mb-2">
+          <h4 className="font-display font-black text-sm text-white mb-2">
             SUBMIT EXTRACTED ANOMALY TOKEN
           </h4>
 
           {isAnomalyConfirmed || isC1Completed ? (
-            <div className="p-4 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-3">
+            <div className="p-4 rounded bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm flex items-center gap-3 shadow-md shadow-emerald-500/10">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
               <div>
-                <strong className="block text-sm text-emerald-200">
+                <strong className="block text-sm font-black text-emerald-200 text-glow-emerald">
                   ANOMALY TOKEN VERIFIED: {ANOMALY_CODE}
                 </strong>
-                <span className="font-sans">DOM metadata successfully verified and synchronized to all mission terminals.</span>
+                <span className="text-slate-100 font-sans">DOM metadata successfully verified and synchronized to all mission terminals.</span>
               </div>
             </div>
           ) : (
             <form onSubmit={handleConfirm} className="space-y-3">
-              <div className="flex gap-2">
+              <div className="flex gap-2.5">
                 <input
                   type="text"
                   placeholder="e.g. SIG-7749-OMEGA"
@@ -242,20 +243,20 @@ export const AnomalyRole: React.FC = () => {
                     setTokenInput(e.target.value.toUpperCase());
                     setErrorMsg(null);
                   }}
-                  className="flex-1 bg-space-950 border border-slate-700 rounded px-3 py-2 text-sm font-mono tracking-wider text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-amber"
+                  className="flex-1 bg-space-950 border border-slate-700 focus:border-amber rounded px-3.5 py-2.5 text-sm font-mono font-bold tracking-wider text-white placeholder:text-slate-500 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded text-xs font-bold uppercase tracking-wider bg-amber hover:bg-amber/90 text-slate-950 transition-all flex items-center gap-2 shadow-lg shadow-amber/20"
+                  className="px-6 py-2.5 rounded text-xs font-black uppercase tracking-wider bg-amber hover:bg-amber/90 text-slate-950 transition-all flex items-center gap-2 shadow-lg shadow-amber/25"
                 >
                   <Send className="w-4 h-4" /> CONFIRM
                 </button>
               </div>
 
               {errorMsg && (
-                <div className="p-2.5 rounded bg-rose-950/40 border border-rose-600/40 text-rose-300 text-xs flex items-center gap-2">
+                <div className="p-3 rounded bg-rose-950/60 border border-rose-600/50 text-rose-200 text-xs flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
-                  <span>{errorMsg}</span>
+                  <span className="font-bold">{errorMsg}</span>
                 </div>
               )}
             </form>

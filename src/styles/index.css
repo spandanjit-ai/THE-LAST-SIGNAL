@@ -5,7 +5,7 @@
 @layer base {
   body {
     background-color: #03060d;
-    color: #e2e8f0;
+    color: #f8fafc;
     font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     overflow-x: hidden;
     letter-spacing: -0.01em;
@@ -17,67 +17,69 @@
   }
 }
 
+/* Radiant Sci-Fi Glow Utilities */
+.text-glow-cyan {
+  color: #00f0ff;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.55), 0 0 24px rgba(0, 240, 255, 0.25);
+}
+
+.text-glow-violet {
+  color: #c084fc;
+  text-shadow: 0 0 12px rgba(192, 132, 252, 0.55), 0 0 24px rgba(192, 132, 252, 0.25);
+}
+
+.text-glow-amber {
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.55), 0 0 24px rgba(251, 191, 36, 0.25);
+}
+
+.text-glow-emerald {
+  color: #34d399;
+  text-shadow: 0 0 12px rgba(52, 211, 153, 0.55), 0 0 24px rgba(52, 211, 153, 0.25);
+}
+
+.text-glow-white {
+  color: #ffffff;
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.45);
+}
+
 /* Hairline Grid Texture (Subtle Noir Grid) */
 .bg-hairline-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
 }
 
 /* Fine Vignette */
 .bg-noir-vignette {
-  background: radial-gradient(circle at 50% 40%, rgba(16, 24, 39, 0.4) 0%, rgba(7, 10, 18, 0.98) 100%);
+  background: radial-gradient(circle at 50% 40%, rgba(12, 19, 34, 0.5) 0%, rgba(3, 6, 13, 0.98) 100%);
 }
 
-/* Restrained Scan Sweep (Barely perceptible CRT sweep) */
-.scanlines-subtle {
+/* Subtle CRT scanlines */
+.scanlines-subtle, .crt-overlay {
   background: linear-gradient(
     rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.15) 50%
+    rgba(0, 0, 0, 0.2) 50%
   );
   background-size: 100% 4px;
   pointer-events: none;
 }
 
-/* Precise Hairline Border Utility */
-.border-hairline {
-  border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.07);
-}
-
-.border-hairline-cyan {
-  border-width: 1px;
-  border-color: rgba(34, 211, 238, 0.25);
-}
-
-/* Restrained Chromatic Glitch (180ms) */
-@keyframes signalGlitch {
-  0% { transform: translate(0); filter: drop-shadow(0 0 0 transparent); }
-  25% { transform: translate(-1px, 1px); filter: drop-shadow(1px 0 0 rgba(34, 211, 238, 0.6)) drop-shadow(-1px 0 0 rgba(255, 180, 84, 0.6)); }
-  50% { transform: translate(1px, -1px); filter: drop-shadow(-1px 0 0 rgba(139, 124, 255, 0.6)); }
-  75% { transform: translate(-0.5px, 0.5px); }
-  100% { transform: translate(0); filter: drop-shadow(0 0 0 transparent); }
-}
-
-.animate-glitch {
-  animation: signalGlitch 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
 /* Custom Tactical Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #070A12;
+  background: #03060d;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 1px;
+  background: #1a2742;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #22D3EE;
+  background: #00f0ff;
 }
 
 /* Reduced Motion Override */

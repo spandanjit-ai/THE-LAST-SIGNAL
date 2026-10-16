@@ -8,7 +8,6 @@ import {
   Zap,
 } from 'lucide-react';
 
-
 export const ChallengeBoard: React.FC<{ defaultExpanded?: boolean }> = ({ defaultExpanded = false }) => {
   const { state } = useMission();
   const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded);
@@ -18,22 +17,22 @@ export const ChallengeBoard: React.FC<{ defaultExpanded?: boolean }> = ({ defaul
   const isC1Completed = c1?.status === 'COMPLETED';
 
   return (
-    <div className="border border-noir-border/80 bg-noir-surface/70 rounded backdrop-blur-md transition-all font-mono">
+    <div className="border border-slate-800 bg-space-900/90 rounded-lg backdrop-blur-md transition-all font-mono">
       {/* Sleek Tactical HUD Bar */}
       <div className="px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
         {/* Left: Track & Phase Indicator */}
         <div className="flex items-center gap-2.5">
           <div
-            className={`w-2 h-2 rounded-full transition-all ${
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
               isC1Completed
-                ? 'bg-signal-cyan shadow-[0_0_8px_#22d3ee]'
-                : 'bg-signal-amber animate-pulse shadow-[0_0_8px_#ffb454]'
+                ? 'bg-cyan shadow-[0_0_10px_#00f0ff]'
+                : 'bg-amber animate-pulse shadow-[0_0_10px_#f59e0b]'
             }`}
           />
-          <span className="font-display font-bold text-xs tracking-wider text-signal-text uppercase">
+          <span className="font-display font-black text-xs tracking-wider text-white uppercase">
             PHASE 01 OVERRIDE
           </span>
-          <span className="text-[10px] text-signal-dim border-l border-noir-border/80 pl-2">
+          <span className="text-[11px] text-amber-400 font-bold border-l border-slate-700 pl-2">
             TRACK OMEGA
           </span>
         </div>
@@ -43,82 +42,74 @@ export const ChallengeBoard: React.FC<{ defaultExpanded?: boolean }> = ({ defaul
           {/* C1 Badge */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`px-2.5 py-1 rounded text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1 rounded text-[11px] font-black tracking-wider uppercase flex items-center gap-1.5 transition-all ${
               isC1Completed
-                ? 'bg-signal-cyan/15 border border-signal-cyan/50 text-signal-cyan'
-                : 'bg-signal-amber/15 border border-signal-amber/40 text-signal-amber hover:border-signal-amber'
+                ? 'bg-cyan/20 border border-cyan/60 text-cyan text-glow-cyan shadow-sm shadow-cyan/20'
+                : 'bg-amber/20 border border-amber/50 text-amber text-glow-amber hover:border-amber animate-pulse'
             }`}
             title="Challenge 01: Plot Twist (Click to inspect dossier)"
           >
             {isC1Completed ? (
-              <CheckCircle2 className="w-3 h-3 text-signal-cyan" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan" />
             ) : (
-              <Zap className="w-3 h-3 text-signal-amber animate-pulse" />
+              <Zap className="w-3.5 h-3.5 text-amber animate-pulse" />
             )}
             <span>C1: PLOT TWIST</span>
-            <span className="text-[9px] opacity-75">[{isC1Completed ? 'SOLVED' : 'ACTIVE'}]</span>
+            <span className="text-[10px] opacity-90">[{isC1Completed ? 'SOLVED' : 'ACTIVE'}]</span>
           </button>
 
           {/* C2 Badge */}
-          <div className="px-2 py-1 rounded text-[10px] font-mono tracking-wider uppercase bg-noir-base/60 border border-noir-border text-signal-dim flex items-center gap-1.5 opacity-60">
-            <Lock className="w-2.5 h-2.5" />
+          <div className="px-2.5 py-1 rounded text-[10px] font-mono tracking-wider uppercase bg-space-950 border border-slate-800 text-slate-400 flex items-center gap-1.5 opacity-60">
+            <Lock className="w-3 h-3" />
             <span>C2: LOCKED</span>
           </div>
 
           {/* C3 Badge */}
-          <div className="px-2 py-1 rounded text-[10px] font-mono tracking-wider uppercase bg-noir-base/60 border border-noir-border text-signal-dim flex items-center gap-1.5 opacity-60">
-            <Lock className="w-2.5 h-2.5" />
+          <div className="px-2.5 py-1 rounded text-[10px] font-mono tracking-wider uppercase bg-space-950 border border-slate-800 text-slate-400 flex items-center gap-1.5 opacity-60">
+            <Lock className="w-3 h-3" />
             <span>C3: LOCKED</span>
           </div>
         </div>
 
         {/* Right: Toggle & Progress */}
-        <div className="flex items-center gap-3 text-[11px] text-signal-dim">
-          <span>UNVEILED: <strong className="text-signal-amber">1/3</strong></span>
+        <div className="flex items-center gap-3 text-xs text-slate-300">
+          <span>UNVEILED: <strong className="text-amber-400 font-bold text-glow-amber">1/3</strong></span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-[10px] tracking-wider text-signal-muted hover:text-signal-cyan transition-colors"
+            className="flex items-center gap-1 text-[11px] font-bold tracking-wider text-cyan-300 hover:text-cyan transition-colors"
           >
             <span>{isExpanded ? 'COLLAPSE' : 'DOSSIER'}</span>
-            {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
         </div>
       </div>
 
       {/* Restrained Classified Dossier (Expanded) */}
       {isExpanded && (
-        <div className="px-4 pb-3.5 pt-2 border-t border-noir-border/60 text-xs">
-          <div className="p-3 rounded bg-noir-base/80 border border-noir-border/70 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div className="px-4 pb-3.5 pt-2 border-t border-slate-800 text-xs">
+          <div className="p-3.5 rounded-lg bg-space-950 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-signal-cyan font-bold text-xs">CHALLENGE 01 // PLOT TWIST</span>
-                <span className="text-[10px] text-signal-dim font-mono">
+                <span className="text-cyan font-black text-xs text-glow-cyan">CHALLENGE 01 // PLOT TWIST</span>
+                <span className="text-[11px] text-slate-400 font-mono">
                   TARGET: #{c1?.targetSelector?.replace('#', '') || 'containment-anomaly-node'}
                 </span>
               </div>
-              <div className="text-[11px] text-signal-muted">
+              <div className="text-xs text-slate-200">
                 {isC1Completed ? (
-                  <span className="text-signal-cyan font-mono">
-                    PROTOCOL OVERRIDDEN: [data-containment-protocol=&quot;OVERRIDE&quot;] // Carrier origin verified as Internal System Beacon.
+                  <span className="text-emerald-300 font-bold text-glow-emerald">
+                    Breach verified: Live DOM mutation resolved. Protocol elevated to OVERRIDE.
                   </span>
                 ) : (
-                  <span className="text-signal-dim font-mono">
-                    DOM Mutation required: Inspect <code className="text-signal-cyan">#containment-anomaly-node</code> on the Anomaly tab and set <code className="text-signal-amber">data-containment-protocol=&quot;OVERRIDE&quot;</code>.
+                  <span>
+                    Inspect DOM node and mutate <code className="text-cyan font-bold">&quot;data-containment-protocol&quot;</code> to <code className="text-amber-300 font-bold">&quot;OVERRIDE&quot;</code>.
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="flex-shrink-0 text-[10px] font-mono">
-              {isC1Completed ? (
-                <span className="text-signal-cyan font-bold px-2 py-0.5 rounded bg-signal-cyan/10 border border-signal-cyan/30">
-                  MUTATION VERIFIED &amp; SYNCED
-                </span>
-              ) : (
-                <span className="text-signal-amber px-2 py-0.5 rounded bg-signal-amber/10 border border-signal-amber/30">
-                  AWAITING DOM MUTATION
-                </span>
-              )}
+            <div className="text-right font-mono text-[11px] text-slate-400">
+              STATUS: <strong className={isC1Completed ? 'text-emerald-300 font-bold' : 'text-amber-400 font-bold'}>{c1?.status || 'ACTIVE'}</strong>
             </div>
           </div>
         </div>
