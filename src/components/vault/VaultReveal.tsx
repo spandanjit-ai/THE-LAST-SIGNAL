@@ -103,7 +103,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
 
         {/* Cinematic Supernova Singularity Detonation Canvas */}
         {state.unlockStatus === 'UNLOCKED' && (
-          <SupernovaCanvas active={true} triggerKey={supernovaKey} className="z-30" />
+          <SupernovaCanvas active={true} triggerKey={supernovaKey} className="pointer-events-none z-0 opacity-30" />
         )}
 
         {/* Modal Top Telemetry Header */}
@@ -167,15 +167,15 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
         {/* Modal Main Body */}
         <div className="p-6 sm:p-8 space-y-6">
           {/* Animated Concentric Mechanical Rings Graphic */}
-          <div className="relative flex items-center justify-center py-4">
+          <div className="relative flex items-center justify-center py-6 bg-black rounded-lg my-1">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               {/* Outer Gear Ring */}
               <svg
-                className={`absolute inset-0 w-full h-full text-signal-cyan/25 transition-all duration-700 ${
+                className={`absolute inset-0 w-full h-full text-white transition-all duration-700 ${
                   state.unlockStatus === 'VERIFYING'
-                    ? 'animate-spin text-signal-cyan/60'
+                    ? 'animate-spin'
                     : state.unlockStatus === 'UNLOCKED'
-                    ? 'rotate-45 text-signal-cyan/50 scale-105'
+                    ? 'rotate-45'
                     : 'animate-spin-slow'
                 }`}
                 viewBox="0 0 200 200"
@@ -185,27 +185,27 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                   cy="100"
                   r="92"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeDasharray="6 8"
+                  stroke="white"
+                  strokeWidth="1.8"
+                  strokeDasharray="6 6"
                 />
                 <circle
                   cx="100"
                   cy="100"
-                  r="86"
+                  r="85"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.6"
+                  stroke="white"
+                  strokeWidth="1"
                 />
               </svg>
 
               {/* Middle Rotating Iris Ring */}
               <svg
-                className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] text-signal-violet/30 transition-all duration-700 ${
+                className={`absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)] text-white transition-all duration-700 ${
                   state.unlockStatus === 'VERIFYING'
-                    ? 'animate-reverse-spin text-signal-violet/60'
+                    ? 'animate-reverse-spin'
                     : state.unlockStatus === 'UNLOCKED'
-                    ? '-rotate-90 text-signal-cyan/40 scale-110'
+                    ? '-rotate-90'
                     : 'animate-reverse-spin'
                 }`}
                 viewBox="0 0 200 200"
@@ -213,59 +213,57 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                 <circle
                   cx="100"
                   cy="100"
-                  r="74"
+                  r="72"
                   fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+                  stroke="white"
+                  strokeWidth="2.5"
                   strokeDasharray="25 15 5 15"
                 />
               </svg>
 
               {/* Inner Optical Reticle */}
               <svg
-                className={`absolute inset-8 w-[calc(100%-64px)] h-[calc(100%-64px)] transition-all duration-500 ${
-                  state.unlockStatus === 'UNLOCKED' ? 'text-signal-cyan/60' : 'text-signal-cyan/35'
-                }`}
+                className="absolute inset-8 w-[calc(100%-64px)] h-[calc(100%-64px)] text-white transition-all duration-500"
                 viewBox="0 0 200 200"
               >
                 <circle
                   cx="100"
                   cy="100"
-                  r="56"
+                  r="54"
                   fill="none"
-                  stroke="currentColor"
+                  stroke="white"
                   strokeWidth="1"
                 />
-                <line x1="100" y1="36" x2="100" y2="48" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="100" y1="152" x2="100" y2="164" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="36" y1="100" x2="48" y2="100" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="152" y1="100" x2="164" y2="100" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="100" y1="36" x2="100" y2="48" stroke="white" strokeWidth="1.5" />
+                <line x1="100" y1="152" x2="100" y2="164" stroke="white" strokeWidth="1.5" />
+                <line x1="36" y1="100" x2="48" y2="100" stroke="white" strokeWidth="1.5" />
+                <line x1="152" y1="100" x2="164" y2="100" stroke="white" strokeWidth="1.5" />
               </svg>
 
               {/* Central Core Status Reactor */}
               <div
                 className={`relative z-10 w-24 h-24 rounded-full flex flex-col items-center justify-center border transition-all duration-700 ${
                   state.unlockStatus === 'UNLOCKED'
-                    ? 'bg-noir-base border-signal-cyan shadow-xl shadow-signal-cyan/30 scale-110'
+                    ? 'bg-black border-2 border-white text-white'
                     : state.unlockStatus === 'VERIFYING'
-                    ? 'bg-noir-base border-signal-cyan shadow-xl shadow-signal-cyan/40 animate-pulse'
-                    : 'bg-noir-base border-noir-border'
+                    ? 'bg-black border border-white text-white animate-pulse'
+                    : 'bg-black border border-white/70 text-white/80'
                 }`}
               >
                 {state.unlockStatus === 'UNLOCKED' ? (
                   <>
-                    <Unlock className="w-8 h-8 text-signal-cyan animate-bounce" />
-                    <span className="text-[10px] font-mono font-bold text-signal-cyan mt-1">OPEN</span>
+                    <Unlock className="w-8 h-8 text-white" strokeWidth={1.8} />
+                    <span className="text-xs font-mono font-bold tracking-widest text-white mt-1">OPEN</span>
                   </>
                 ) : state.unlockStatus === 'VERIFYING' ? (
                   <>
-                    <Sparkles className="w-8 h-8 text-signal-cyan animate-spin" />
-                    <span className="text-[9px] font-mono font-bold text-signal-cyan mt-1">AUTH</span>
+                    <Sparkles className="w-8 h-8 text-white animate-spin" />
+                    <span className="text-[10px] font-mono font-bold text-white tracking-wider mt-1">AUTH</span>
                   </>
                 ) : (
                   <>
-                    <Lock className="w-8 h-8 text-signal-dim" />
-                    <span className="text-[9px] font-mono text-signal-dim mt-1">LOCKED</span>
+                    <Lock className="w-8 h-8 text-white/80" strokeWidth={1.8} />
+                    <span className="text-[10px] font-mono font-bold text-white/80 tracking-wider mt-1">LOCKED</span>
                   </>
                 )}
               </div>
