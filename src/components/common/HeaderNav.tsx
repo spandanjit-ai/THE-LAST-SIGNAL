@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useMission } from '../../hooks/useMission';
 import { MissionRole } from '../../engine/missionTypes';
 import {
+  Radio,
+  Wifi,
   Volume2,
   VolumeX,
   RotateCcw,
   Layers,
   Lock,
   Unlock,
-  AlertTriangle,
+  ExternalLink,
 } from 'lucide-react';
 
 interface HeaderNavProps {
@@ -28,189 +30,179 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  const roles: Array<{
-    id: MissionRole;
-    label: string;
-    number: string;
-    completed: boolean;
-    color: 'cyan' | 'violet' | 'amber';
-  }> = [
-    {
-      id: 'transmission',
-      label: 'TRANSMISSION',
-      number: '01',
-      completed: state.completedStages.transmission || state.cipherDecoded,
-      color: 'cyan',
+  const openRoleInNewTab = (targetRole: MissionRole) => {
+    const url = `${window.location.origin}${window.location.pathname}?role=${targetRole}`;
+    window.open(url, '_blank');
+  };
+
+  const roleLabels: Record<MissionRole, { label: string; color: string }> = {
+    transmission: {
+      label: 'TERMINAL 1 // TRANSMISSION',
+      color: 'border-cyan text-cyan bg-cyan/10',
     },
-    {
-      id: 'key',
-      label: 'DECRYPTION KEY',
-      number: '02',
-      completed: state.completedStages.key || state.keyDiscovered,
-      color: 'violet',
+    key: {
+      label: 'TERMINAL 2 // CIPHER KEY',
+      color: 'border-violet text-violet bg-violet/10',
     },
-    {
-      id: 'anomaly',
-      label: 'DOM ANOMALY',
-      number: '03',
-      completed: state.completedStages.anomaly || state.anomalyConfirmed,
-      color: 'amber',
+    anomaly: {
+      label: 'TERMINAL 3 // DOM ANOMALY',
+      color: 'border-amber text-amber bg-amber/10',
     },
-  ];
+  };
+
+  const activeRoleBadge = currentRole
+    ? roleLabels[currentRole]
+    : { label: 'MISSION OVERVIEW', color: 'border-cyan/40 text-cyan bg-cyan/10' };
 
   return (
-    <header className="relative z-30 border-b border-noir-border bg-noir-base/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3">
-      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
-        {/* Brand identity & Mission ID */}
-        <div className="flex items-center gap-3">
+    <header className="border-b border-slate-800 bg-space-900/90 backdrop-blur-md sticky top-0 z-40 px-4 py-3 font-mono">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Left: Brand & Mission ID & Active Role Badge */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
           <button
             onClick={() => setRole(null)}
-            className="flex items-center gap-2.5 text-left group focus:outline-none"
+            className="flex items-center gap-2 text-left group focus:outline-none"
             title="Return to Overview"
           >
-            <div className="w-6 h-6 rounded border border-signal-cyan/40 bg-noir-surface flex items-center justify-center text-signal-cyan shadow-[0_0_10px_rgba(34,211,238,0.2)]">
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M12 2v3m0 14v3M2 12h3m14 0h3" />
-              </svg>
+            <div className="relative">
+              <Radio className="w-5 h-5 text-cyan animate-pulse" />
+              <div className="absolute -inset-1 bg-cyan/20 rounded-full blur-sm -z-10" />
             </div>
             <div>
-              <div className="font-display font-bold tracking-tight text-sm sm:text-base text-slate-100 group-hover:text-signal-cyan transition-colors">
+              <span className="font-display font-black tracking-wider text-sm sm:text-base text-slate-100 group-hover:text-cyan transition-colors">
                 THE LAST SIGNAL
-              </div>
-              <div className="text-[10px] font-mono text-signal-dim">
-                RELAY: <span className="text-signal-cyan font-bold">{state.missionId}</span> // REV {state.revision}
+              </span>
+              <div className="text-[10px] text-slate-400 tracking-tight flex items-center gap-2 font-mono">
+                <span>SEC-SYS // CLASSIFIED</span>
+                <span className="text-cyan font-bold">{state.missionId}</span>
               </div>
             </div>
           </button>
+
+          {/* Current Role Badge */}
+          <div className={`px-2.5 py-1 text-[11px] font-bold rounded border tracking-wider uppercase ${activeRoleBadge.color}`}>
+            {activeRoleBadge.label}
+          </div>
         </div>
 
-        {/* Tab Role Switcher */}
-        <nav className="flex items-center gap-1 sm:gap-2 font-mono text-xs">
-          {roles.map((r) => {
-            const isActive = currentRole === r.id;
-            const activeColorClass =
-              r.color === 'cyan'
-                ? 'border-signal-cyan/50 bg-signal-cyan/15 text-signal-cyan shadow-[0_0_12px_rgba(34,211,238,0.15)] font-bold'
-                : r.color === 'violet'
-                ? 'border-signal-violet/50 bg-signal-violet/15 text-signal-violet shadow-[0_0_12px_rgba(139,124,255,0.15)] font-bold'
-                : 'border-signal-amber/50 bg-signal-amber/15 text-signal-amber shadow-[0_0_12px_rgba(255,180,84,0.15)] font-bold';
-
-            const dotColor =
-              r.color === 'cyan'
-                ? 'bg-signal-cyan'
-                : r.color === 'violet'
-                ? 'bg-signal-violet'
-                : 'bg-signal-amber';
-
+        {/* Center: Tab Navigation / Multi-tab Launchers */}
+        <div className="flex items-center gap-1.5 bg-space-950 p-1 rounded-md border border-slate-800 text-xs w-full md:w-auto justify-center">
+          <span className="text-[10px] text-slate-500 uppercase tracking-widest px-2 hidden lg:inline flex items-center gap-1">
+            <Layers className="w-3 h-3" /> Tabs:
+          </span>
+          {(['transmission', 'key', 'anomaly'] as MissionRole[]).map((r) => {
+            const isCurrent = r === currentRole;
             return (
-              <button
-                key={r.id}
-                onClick={() => setRole(r.id)}
-                className={`px-3 py-1.5 rounded transition-all flex items-center gap-2 border ${
-                  isActive
-                    ? activeColorClass
-                    : 'border-transparent text-slate-400 hover:text-white hover:bg-noir-surface/60'
-                }`}
-              >
-                <span className={`text-[10px] ${isActive ? 'font-bold' : 'text-signal-dim'}`}>{r.number}</span>
-                <span>{r.label}</span>
-                {r.completed ? (
-                  <span className={`w-1.5 h-1.5 rounded-full ${dotColor} shadow-[0_0_6px_currentColor]`} />
-                ) : (
-                  <span className="w-1 h-1 rounded-full bg-slate-700" />
-                )}
-              </button>
+              <div key={r} className="flex items-center">
+                <button
+                  onClick={() => setRole(r)}
+                  className={`px-2.5 py-1 rounded text-[11px] uppercase tracking-wider font-semibold transition-all ${
+                    isCurrent
+                      ? 'bg-slate-800 text-cyan border border-cyan/40 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-space-900'
+                  }`}
+                >
+                  {r}
+                </button>
+                <button
+                  title={`Open ${r} in separate tab`}
+                  onClick={() => openRoleInNewTab(r)}
+                  className="p-1 text-slate-500 hover:text-cyan transition-colors"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
             );
           })}
-        </nav>
+        </div>
 
-
-        {/* Right utility cluster */}
-        <div className="flex items-center gap-2.5 font-mono text-xs">
-          {/* Connected tabs count */}
-          <div
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded border border-noir-border bg-noir-surface text-signal-muted text-[11px]"
-            title="Connected browser tabs via BroadcastChannel"
-          >
-            <Layers className="w-3.5 h-3.5 text-signal-cyan" />
-            <span>
-              <strong className="text-signal-cyan">{connectedTabs}</strong> {connectedTabs === 1 ? 'TAB' : 'TABS'}
-            </span>
+        {/* Right: Sync Status & Controls */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end text-xs">
+          {/* Connected Tabs & Sync Pill */}
+          <div className="flex items-center gap-2 text-slate-400 text-[11px]">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-space-950 border border-slate-800">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+              <Wifi className="w-3 h-3 text-emerald-400" />
+              <span className="text-[10px] tracking-wider uppercase text-emerald-300 font-bold">
+                REV-{state.revision} ({connectedTabs} {connectedTabs === 1 ? 'TAB' : 'TABS'})
+              </span>
+            </div>
           </div>
 
-          {/* Vault trigger button */}
+          {/* Vault Modal Trigger Button */}
           <button
             onClick={onOpenVaultModal}
-            className={`px-3 py-1 rounded border flex items-center gap-1.5 font-display font-bold text-xs tracking-wider uppercase transition-all ${
+            className={`px-3 py-1.5 rounded border flex items-center gap-1.5 font-display font-bold text-xs tracking-wider uppercase transition-all ${
               state.unlockStatus === 'UNLOCKED'
-                ? 'border-signal-cyan/60 bg-noir-surface text-signal-cyan'
-                : 'border-noir-border bg-noir-surface text-signal-text hover:border-signal-cyan/40 hover:text-signal-cyan'
+                ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300'
+                : 'border-slate-800 bg-space-950 text-slate-300 hover:border-cyan/40 hover:text-cyan'
             }`}
           >
             {state.unlockStatus === 'UNLOCKED' ? (
               <>
-                <Unlock className="w-3.5 h-3.5 text-signal-cyan" />
-                <span>ARCHIVE OPEN</span>
+                <Unlock className="w-3.5 h-3.5 text-emerald-400" />
+                <span>VAULT OPEN</span>
               </>
             ) : (
               <>
-                <Lock className="w-3.5 h-3.5 text-signal-dim" />
+                <Lock className="w-3.5 h-3.5 text-slate-500" />
                 <span>VAULT GATE</span>
               </>
             )}
           </button>
 
-          {/* Audio toggle */}
-          <button
-            onClick={toggleAudio}
-            title={isAudioEnabled ? 'Mute' : 'Enable Audio'}
-            className="p-1.5 rounded border border-noir-border hover:border-signal-cyan/40 text-signal-muted hover:text-signal-cyan transition-colors"
-          >
-            {isAudioEnabled ? (
-              <Volume2 className="w-4 h-4 text-signal-cyan" />
-            ) : (
-              <VolumeX className="w-4 h-4 text-signal-dim" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Audio Mute */}
+            <button
+              onClick={toggleAudio}
+              title={isAudioEnabled ? 'Mute Audio' : 'Unmute Audio'}
+              className="p-2 rounded bg-space-950 border border-slate-800 text-slate-400 hover:text-cyan hover:border-cyan/40 transition-all"
+            >
+              {isAudioEnabled ? (
+                <Volume2 className="w-3.5 h-3.5 text-cyan" />
+              ) : (
+                <VolumeX className="w-3.5 h-3.5 text-slate-500" />
+              )}
+            </button>
 
-          {/* Reset button */}
-          <button
-            onClick={() => setShowResetConfirm(true)}
-            title="Reset Mission"
-            className="p-1.5 rounded border border-noir-border hover:border-signal-amber/40 text-signal-dim hover:text-signal-amber transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
+            {/* Reset Mission */}
+            <button
+              onClick={() => setShowResetConfirm(true)}
+              title="Reset Mission Run"
+              className="px-2.5 py-1.5 rounded bg-space-950 border border-rose-900/40 text-rose-400 hover:bg-rose-950/40 hover:border-rose-700 transition-all flex items-center gap-1.5 text-[11px] font-semibold"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">RESET</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Reset Confirmation Dialog */}
       {showResetConfirm && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-noir-surface border border-noir-border p-6 rounded max-w-md w-full shadow-2xl">
-            <div className="flex items-center gap-3 text-signal-amber mb-3">
-              <AlertTriangle className="w-5 h-5" />
-              <h3 className="font-display text-lg font-bold">REINITIALIZE MISSION?</h3>
-            </div>
-            <p className="text-signal-muted text-xs font-mono leading-relaxed mb-6">
-              This will reset all recovered clues, cipher translations, and security locks across all connected browser tabs.
+        <div className="fixed inset-0 bg-space-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-space-900 border border-rose-600/40 rounded-lg p-6 max-w-md w-full shadow-2xl font-mono">
+            <h3 className="font-display font-bold text-base text-rose-400 mb-2 flex items-center gap-2">
+              <RotateCcw className="w-4 h-4" /> RESET ACTIVE MISSION
+            </h3>
+            <p className="text-slate-300 text-xs mb-5 leading-relaxed font-sans">
+              Are you sure you want to purge all mission progress? This will reset all discovered clues, cipher stages, and vault states across all active browser tabs.
             </p>
-            <div className="flex justify-end gap-3 font-mono text-xs">
+            <div className="flex justify-end gap-3 text-xs">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 rounded border border-noir-border text-signal-muted hover:bg-noir-base transition-colors"
+                className="px-4 py-1.5 rounded bg-space-800 border border-slate-700 text-slate-300 hover:bg-space-700 transition-colors"
               >
                 CANCEL
               </button>
               <button
                 onClick={() => {
-                  resetMission();
                   setShowResetConfirm(false);
+                  resetMission();
                 }}
-                className="px-4 py-2 rounded bg-signal-amber text-[#070A12] font-bold hover:bg-[#FBBF24] transition-colors"
+                className="px-4 py-1.5 font-semibold rounded bg-rose-600 hover:bg-rose-500 text-white transition-colors"
               >
-                CONFIRM RESET
+                PURGE & RESET
               </button>
             </div>
           </div>

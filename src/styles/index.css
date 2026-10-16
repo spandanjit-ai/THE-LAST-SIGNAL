@@ -4,15 +4,15 @@
 
 @layer base {
   body {
-    background-color: #070A12;
-    color: #E8EDF5;
-    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    background-color: #03060d;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
     overflow-x: hidden;
     letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, .font-display {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Space Grotesk', 'Orbitron', sans-serif;
     letter-spacing: -0.02em;
   }
 }

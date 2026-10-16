@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { MissionProvider, useMission } from './hooks/useMission';
 import { BackgroundFX } from './components/common/BackgroundFX';
 import { HeaderNav } from './components/common/HeaderNav';
-import { SignalHero } from './components/common/SignalHero';
-import { SynchronizedNodeMesh } from './components/common/SynchronizedNodeMesh';
-import { EvidenceDossier } from './components/common/EvidenceDossier';
+import { PhaseIndicator } from './components/common/PhaseIndicator';
+import { ClueTracker } from './components/common/ClueTracker';
 import { ChallengeBoard } from './components/challenges/ChallengeBoard';
 import { LandingScreen } from './components/landing/LandingScreen';
 import { TransmissionRole } from './components/roles/TransmissionRole';
@@ -36,7 +35,7 @@ const MissionApp: React.FC = () => {
   // If no role parameter is set in URL, display the Landing Screen
   if (!currentRole) {
     return (
-      <main className="relative min-h-screen text-slate-100 flex flex-col justify-between">
+      <main className="relative min-h-screen text-slate-100 flex flex-col justify-between bg-space-950">
         <BackgroundFX />
         <LandingScreen
           onStartMission={(role: MissionRole = 'transmission') => {
@@ -55,22 +54,21 @@ const MissionApp: React.FC = () => {
     );
   }
 
-
   // Active Mission View
   return (
-    <div className="relative min-h-screen flex flex-col text-slate-100">
+    <div className="relative min-h-screen flex flex-col text-slate-100 bg-space-950">
       <BackgroundFX />
 
       {/* Top Tactical Navigation */}
       <HeaderNav onOpenVaultModal={() => setShowVaultModal(true)} />
 
       {/* Main Focus Area */}
-      <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        {/* The Signal Hero: Real-time carrier oscilloscope responding to temporal phase */}
-        <SignalHero compact={true} />
+      <main className="relative z-10 flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
+        {/* Real-time Temporal Phase Monitor */}
+        <PhaseIndicator />
 
-        {/* Interconnected Machine Topology Nodes */}
-        <SynchronizedNodeMesh />
+        {/* Cross-Tab Clue Synchronization Matrix */}
+        <ClueTracker />
 
         {/* Hackathon Evaluation: Surprise Challenge System (Track Omega) */}
         <ChallengeBoard defaultExpanded={false} />
@@ -89,9 +87,6 @@ const MissionApp: React.FC = () => {
             <AnomalyRole />
           )}
         </section>
-
-        {/* Evidence Dossier & Vault Gate Readiness */}
-        <EvidenceDossier onOpenVault={() => setShowVaultModal(true)} />
       </main>
 
       {/* Vault Reveal Modal */}
@@ -108,7 +103,7 @@ const MissionApp: React.FC = () => {
               triggerJudgeSolve();
               setShowVaultModal(true);
             }}
-            className="text-[11px] text-slate-400 hover:text-cyan-300 border border-slate-800 hover:border-cyan-500/40 bg-space-900 px-2.5 py-1 rounded transition-colors flex items-center gap-1.5"
+            className="text-[11px] text-slate-400 hover:text-cyan border border-slate-800 hover:border-cyan/40 bg-space-900 px-2.5 py-1 rounded transition-colors flex items-center gap-1.5"
             title="Fast solve for hackathon judges: Populates all clues & STABLE phase (Shortcut: Ctrl+Shift+D)"
           >
             <span>⚡</span>

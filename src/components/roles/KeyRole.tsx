@@ -1,209 +1,243 @@
 import React, { useState } from 'react';
 import { useMission } from '../../hooks/useMission';
 import {
-  KeyRound,
-  ShieldCheck,
+  Key,
+  Radio,
+  Cpu,
   CheckCircle2,
-  Lock,
+  Sparkles,
+  Share2,
+  ShieldCheck,
   Compass,
   ArrowRight,
-  Cpu,
 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 
 export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ onNavigateToRole }) => {
   const { state, discoverKey } = useMission();
+  const isKeyUnlocked = Boolean(state.keyDiscovered || state.completedStages?.key);
 
-  // Interactive frequency tuner
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+
+  // Manual frequency slider option
   const [frequency, setFrequency] = useState<number>(1416.0);
   const targetFrequency = 1420.4;
   const isTuned = Math.abs(frequency - targetFrequency) < 0.6;
-  const isKeyUnlocked = state.keyDiscovered || state.completedStages.key;
+
+  const startFrequencyAnalysis = () => {
+    SoundFX.playTick();
+    setIsScanning(true);
+    setScanProgress(0);
+
+    let current = 0;
+    const interval = setInterval(() => {
+      current += 20;
+      setScanProgress(current);
+      SoundFX.playTick();
+
+      if (current >= 100) {
+        clearInterval(interval);
+        setIsScanning(false);
+        SoundFX.playSuccessPing();
+        discoverKey();
+      }
+    }, 250);
+  };
 
   const handleTune = (val: number) => {
     setFrequency(val);
     SoundFX.playTick();
   };
 
-  const handleUnlockKey = () => {
-    discoverKey();
+  const handleManualUnlock = () => {
+    if (isTuned) {
+      SoundFX.playSuccessPing();
+      discoverKey();
+    }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Telemetry Header */}
-      <div className="border border-noir-border bg-noir-surface/90 rounded p-5 sm:p-6 backdrop-blur-md">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-noir-border">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded bg-noir-base border border-signal-violet/30 text-signal-violet">
-              <KeyRound className="w-5 h-5" />
+    <div className="space-y-6 font-mono">
+      {/* 1. Header Banner */}
+      <div className="bg-space-900 border border-violet/30 rounded-lg p-5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-violet/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-2">
+          <div>
+            <div className="flex items-center gap-2 text-violet text-xs font-bold tracking-widest uppercase mb-1">
+              <Key className="w-4 h-4" /> CRYPTOGRAPHIC TELEMETRY
             </div>
-            <div>
-              <div className="text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
-                CRYPTOGRAPHIC ARCHIVE NODE
-              </div>
-              <h2 className="font-display font-bold text-xl text-purple-300 tracking-tight drop-shadow-[0_0_10px_rgba(139,124,255,0.25)]">
-                CIPHER PARAMETER RECOVERY
-              </h2>
-            </div>
+            <h2 className="font-display font-black text-xl md:text-2xl text-slate-100 tracking-wider">
+              ORBITAL KEY ANALYZER
+            </h2>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs">
-            {isKeyUnlocked ? (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#8B7CFF]/15 border border-[#8B7CFF]/40 text-purple-300 font-bold">
-                <ShieldCheck className="w-3.5 h-3.5 text-signal-violet" />
-                KEY RECOVERED &amp; SYNCED
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-noir-base border border-purple-500/30 text-purple-300/80">
-                <Lock className="w-3.5 h-3.5 text-purple-400" />
-                RESONANCE LOCK ACTIVE
-              </span>
-            )}
+          <div
+            className={`px-3 py-1 rounded text-xs font-mono border ${
+              isKeyUnlocked
+                ? 'bg-violet/20 border-violet/50 text-violet font-bold'
+                : 'bg-space-950 border-slate-700 text-slate-400'
+            }`}
+          >
+            KEY STATUS: {isKeyUnlocked ? 'SYNCHRONIZED' : 'LOCKED / PENDING SCAN'}
           </div>
         </div>
 
-        <p className="text-xs font-mono text-slate-300 leading-relaxed max-w-2xl">
-          The transmission cipher offset is stored within a harmonic carrier subchannel.
-          Tune the resonance frequency slider into the <span className="text-purple-300 font-bold">hydrogen carrier line [1420.4 MHz]</span> to extract the <span className="text-cyan-300 font-bold">decryption parameters</span>.
+        <p className="text-slate-400 text-xs leading-relaxed max-w-3xl font-sans">
+          Terminal 2 intercepts deep orbital telemetry to extract the rotation index required to unscramble the raw transmission in Terminal 1.
         </p>
       </div>
 
-      {/* Resonance Frequency Tuner */}
-      {!isKeyUnlocked && (
-        <div className="border border-noir-border bg-noir-surface/90 rounded p-5 sm:p-6 backdrop-blur-md space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-noir-border">
-            <div className="flex items-center gap-2">
-              <Compass className="w-4 h-4 text-signal-violet" />
-              <h3 className="font-display font-bold text-lg text-purple-300 tracking-wide drop-shadow-[0_0_8px_rgba(139,124,255,0.25)]">
-                HARMONIC RESONANCE TUNER
-              </h3>
-            </div>
-            <div className="text-xs font-mono text-signal-muted">
-              TARGET FREQUENCY: <span className="text-purple-300 font-bold">1420.4 MHz</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-xs font-mono text-signal-muted">
-              <span>TUNED FREQUENCY:</span>
-              <span
-                className={`text-xl font-bold font-mono ${
-                  isTuned ? 'text-signal-cyan animate-pulse' : 'text-signal-violet'
-                }`}
-              >
-                {frequency.toFixed(1)} MHz
-              </span>
-            </div>
-
-            <input
-              type="range"
-              min="1410.0"
-              max="1430.0"
-              step="0.2"
-              value={frequency}
-              onChange={(e) => handleTune(parseFloat(e.target.value))}
-              className="w-full accent-[#8B7CFF] h-2 bg-noir-base rounded cursor-pointer"
-            />
-
-            <div className="flex justify-between text-[10px] font-mono text-signal-dim">
-              <span>1410.0 MHz</span>
-              <span>1420.4 MHz (TARGET)</span>
-              <span>1430.0 MHz</span>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={handleUnlockKey}
-                disabled={!isTuned}
-                className={`px-5 py-2.5 rounded font-display font-bold text-xs tracking-wider uppercase transition-all flex items-center gap-2 ${
-                  isTuned
-                    ? 'bg-signal-violet hover:bg-[#A397FF] text-[#070A12] shadow-sm active:scale-95'
-                    : 'bg-noir-base text-signal-dim cursor-not-allowed border border-noir-border'
-                }`}
-              >
-                <KeyRound className="w-4 h-4" />
-                {isTuned ? 'DECRYPT KEY PARAMETERS' : 'ALIGN CARRIER TO UNLOCK'}
-              </button>
-            </div>
-          </div>
+      {/* 2. Interactive Frequency Interceptor */}
+      <div className="bg-space-900 border border-slate-800 rounded-lg p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Cpu className="w-4 h-4 text-violet" />
+          <h3 className="font-display font-bold text-base text-slate-200">
+            TRANSMISSION FREQUENCY DECONVOLUTION
+          </h3>
         </div>
-      )}
 
-      {/* Discovered Key Information Display */}
-      {isKeyUnlocked && (
-        <div className="border border-noir-border bg-noir-surface/90 rounded p-5 sm:p-6 backdrop-blur-md space-y-6">
-          <div className="flex items-center gap-2 text-signal-violet text-xs font-mono pb-3 border-b border-noir-border">
-            <CheckCircle2 className="w-4 h-4 text-signal-violet" />
-            <span>AUTHENTICATED CIPHER PARAMETERS DECRYPTED</span>
-          </div>
-
-          {/* Cipher Shift Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded bg-noir-base border border-noir-border">
-              <div className="text-[10px] font-mono text-signal-dim uppercase mb-1">
-                CIPHER ALGORITHM
-              </div>
-              <div className="text-xl font-display font-bold text-signal-text mb-2">
-                CAESAR CIPHER / ROT-3
-              </div>
-              <div className="text-xs font-mono text-signal-muted leading-relaxed">
-                Backward displacement: <span className="text-signal-violet font-bold">-2 (or 3-step classic)</span>
-                <br />
-                Forward modular offset: <span className="text-signal-dim">+24</span>
-              </div>
+        {!isKeyUnlocked ? (
+          <div className="bg-space-950 p-6 rounded-lg border border-slate-800 text-center space-y-6">
+            <Radio className="w-12 h-12 text-violet/60 mx-auto animate-pulse" />
+            <div>
+              <h4 className="text-slate-200 font-bold text-sm mb-1">
+                ENCRYPTED CARRIER FREQUENCY DETECTED
+              </h4>
+              <p className="text-slate-400 text-xs max-w-md mx-auto font-sans leading-relaxed">
+                Scan the incoming carrier spectrum (or align the hydrogen resonance slider to 1420.4 MHz) to isolate the Caesar rotation key.
+              </p>
             </div>
 
-            <div className="p-4 rounded bg-noir-base border border-noir-border">
-              <div className="text-[10px] font-mono text-signal-dim uppercase mb-1">
-                CHARACTER SHIFT SAMPLE
-              </div>
-              <div className="text-xs font-mono space-y-1.5 pt-1">
-                <div className="flex justify-between border-b border-noir-border pb-1">
-                  <span className="text-signal-dim">&apos;V&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;T&apos; (-2)</span>
+            {/* Scanning Progress */}
+            {isScanning ? (
+              <div className="max-w-xs mx-auto space-y-2">
+                <div className="w-full bg-space-900 rounded-full h-2 overflow-hidden border border-slate-800">
+                  <div
+                    className="bg-violet h-full transition-all duration-200"
+                    style={{ width: `${scanProgress}%` }}
+                  />
                 </div>
-                <div className="flex justify-between border-b border-noir-border pb-1">
-                  <span className="text-signal-dim">&apos;J&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;H&apos; (-2)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-signal-dim">&apos;G&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;E&apos; (-2)</span>
+                <div className="text-[11px] font-mono text-violet animate-pulse">
+                  DECONVOLVING CARRIER SPECTRUM: {scanProgress}%
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Fragment of the Final Directive */}
-          <div className="p-5 rounded bg-noir-base border border-signal-violet/30">
-            <div className="flex items-center gap-2 text-signal-violet text-xs font-mono mb-2">
-              <Cpu className="w-4 h-4" />
-              <span>CLASSIFIED OPERATIONAL DIRECTIVE // FRAGMENT B</span>
-            </div>
-            <p className="font-mono text-xs sm:text-sm text-signal-text leading-relaxed italic">
-              &quot;The planetary transmission vault is guarded by temporal resonance dampeners. Submissions will be rejected during SEARCHING and ALIGNING intervals. Transmit the final unlock sequence strictly when the carrier frequency attains <span className="text-signal-cyan font-bold not-italic">STABLE</span> resonance.&quot;
-            </p>
-          </div>
-
-          {/* Navigation Action */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div className="text-xs font-mono text-signal-dim">
-              Shift parameters have been automatically broadcast to all active tabs.
-            </div>
-
-            {onNavigateToRole && (
-              <button
-                onClick={() => onNavigateToRole('transmission')}
-                className="px-4 py-2 rounded bg-noir-base hover:bg-noir-elevated border border-noir-border text-signal-text font-display font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-colors"
-              >
-                APPLY TO TRANSMISSION DECODER
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={startFrequencyAnalysis}
+                  className="px-6 py-2.5 rounded font-bold text-xs bg-violet hover:bg-violet/90 text-white transition-all flex items-center gap-2 shadow-lg shadow-violet/20"
+                >
+                  <Sparkles className="w-4 h-4" /> INITIATE TELEMETRY SCAN
+                </button>
+              </div>
             )}
+
+            {/* Manual Slider Alternative */}
+            <div className="pt-4 border-t border-slate-800/80 max-w-md mx-auto text-left space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-violet" /> MANUAL TUNER:
+                </span>
+                <span className={isTuned ? 'text-cyan font-bold animate-pulse' : 'text-slate-300'}>
+                  {frequency.toFixed(1)} MHz {isTuned && '(TARGET)'}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="1410.0"
+                max="1430.0"
+                step="0.2"
+                value={frequency}
+                onChange={(e) => handleTune(parseFloat(e.target.value))}
+                className="w-full accent-violet h-2 bg-space-900 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-slate-500">
+                <span>1410.0 MHz</span>
+                <span className="text-violet font-semibold">1420.4 MHz</span>
+                <span>1430.0 MHz</span>
+              </div>
+              {isTuned && !isScanning && (
+                <div className="pt-2 flex justify-center">
+                  <button
+                    onClick={handleManualUnlock}
+                    className="px-4 py-1.5 rounded text-xs font-bold uppercase bg-violet/20 border border-violet/40 text-violet hover:bg-violet/30 transition-all flex items-center gap-1.5"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" /> LOCK IN 1420.4 MHz
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="space-y-4">
+            {/* Discovered Key Card */}
+            <div className="bg-space-950 p-5 rounded-lg border border-violet/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase font-bold text-violet flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4" /> RECOVERED ROTATION KEY
+                </span>
+                <span className="text-[10px] font-mono bg-violet/10 text-violet px-2 py-0.5 rounded border border-violet/20">
+                  CONFIDENCE: 99.9%
+                </span>
+              </div>
+
+              <div className="p-4 rounded bg-space-900 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                    OPTIMAL CAESAR OFFSET
+                  </div>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-violet tracking-wider">
+                    SHIFT: 2 (BACKWARD)
+                  </div>
+                </div>
+
+                <div className="text-right text-xs text-slate-400 font-mono">
+                  <div>ROTATION: <span className="text-slate-200 font-bold">-2 / +24</span></div>
+                  <div>FORMULA: <span className="text-slate-200 font-bold">(C - 2) mod 26</span></div>
+                </div>
+              </div>
+
+              {/* Clue Fragment Narrative */}
+              <div className="p-3.5 rounded bg-violet/5 border border-violet/20 text-xs text-slate-300 leading-relaxed font-mono">
+                <strong className="text-violet block mb-1">TELEMETRY FRAGMENT #01:</strong>
+                &quot;Carrier waveform reveals a classical 2-letter leftward displacement. When applied to{' '}
+                <span className="text-cyan font-bold mx-1">VJG NCUV UKIPCN</span>, the carrier resolves directly into the primary mission codename. Synchronized across all terminal channels.&quot;
+              </div>
+            </div>
+
+            {/* Cross-Tab Sync Status Banner */}
+            <div className="p-3 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>
+                  Shift key is actively synchronized with <strong>Terminal 1 (Transmission)</strong> and <strong>Terminal 3 (Anomaly)</strong>.
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    SoundFX.playSuccessPing();
+                    discoverKey();
+                  }}
+                  className="text-[11px] underline flex items-center gap-1 hover:text-emerald-200 shrink-0"
+                >
+                  <Share2 className="w-3.5 h-3.5" /> Re-broadcast
+                </button>
+                {onNavigateToRole && (
+                  <button
+                    onClick={() => onNavigateToRole('transmission')}
+                    className="px-3 py-1 rounded bg-violet text-slate-950 font-bold text-xs uppercase hover:bg-violet/90 transition-all flex items-center gap-1 shrink-0"
+                  >
+                    GO TO TAB 1 <ArrowRight className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

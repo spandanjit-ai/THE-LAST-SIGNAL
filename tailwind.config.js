@@ -7,20 +7,48 @@ export default {
   theme: {
     extend: {
       colors: {
+        space: {
+          950: '#03060d',
+          900: '#070c18',
+          850: '#0c1322',
+          800: '#111b2e',
+          700: '#1a2742',
+        },
         noir: {
-          base: '#070A12',
-          surface: '#101827',
-          elevated: '#172236',
+          base: '#03060d',
+          surface: '#070c18',
+          elevated: '#0c1322',
           border: 'rgba(255, 255, 255, 0.08)',
           subtle: 'rgba(255, 255, 255, 0.04)',
         },
+        cyan: {
+          DEFAULT: '#00f0ff',
+          glow: 'rgba(0, 240, 255, 0.4)',
+          dim: 'rgba(0, 240, 255, 0.15)',
+        },
+        violet: {
+          DEFAULT: '#8b5cf6',
+          glow: 'rgba(139, 92, 246, 0.4)',
+          dim: 'rgba(139, 92, 246, 0.15)',
+        },
+        amber: {
+          DEFAULT: '#f59e0b',
+          glow: 'rgba(245, 158, 11, 0.4)',
+          dim: 'rgba(245, 158, 11, 0.15)',
+        },
+        emerald: {
+          DEFAULT: '#10b981',
+          glow: 'rgba(16, 185, 129, 0.4)',
+          dim: 'rgba(16, 185, 129, 0.15)',
+        },
         signal: {
-          cyan: '#22D3EE',
-          violet: '#8B7CFF',
-          amber: '#FFB454',
-          text: '#E8EDF5',
-          muted: '#8A99AD',
-          dim: '#4D5B6E',
+          cyan: '#00f0ff',
+          violet: '#8b5cf6',
+          amber: '#f59e0b',
+          emerald: '#10b981',
+          text: '#e2e8f0',
+          muted: '#94a3b8',
+          dim: '#64748b',
         },
       },
       fontFamily: {

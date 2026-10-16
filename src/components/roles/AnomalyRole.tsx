@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMission } from '../../hooks/useMission';
 import {
   CONTAINMENT_ELEMENT_ID,
@@ -11,22 +11,27 @@ import { ANOMALY_CODE } from '../../engine/verification';
 import { SupernovaCanvas } from '../effects/SupernovaCanvas';
 import { SoundFX } from '../../utils/audio';
 import {
+  Search,
+  Code,
+  CheckCircle2,
+  AlertTriangle,
   ShieldAlert,
-  ShieldCheck,
-  Terminal,
-  Radio,
+  Send,
   Zap,
 } from 'lucide-react';
-
 
 export const AnomalyRole: React.FC = () => {
   const { state, completeChallenge, confirmAnomaly } = useMission();
   const containmentNodeRef = useRef<HTMLDivElement>(null);
 
+  const isAnomalyConfirmed = Boolean(state.anomalyConfirmed || state.completedStages?.anomaly);
   const c1Status = state.challenges?.items?.C1?.status;
   const isC1Completed = c1Status === 'COMPLETED';
 
-  // Real DOM Mutation Observer
+  const [tokenInput, setTokenInput] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Real DOM Mutation Observer on Containment Chamber (#containment-anomaly-node)
   useEffect(() => {
     const el = containmentNodeRef.current;
     if (!el) return;
@@ -47,174 +52,214 @@ export const AnomalyRole: React.FC = () => {
       },
     });
 
-
     return () => cleanup();
   }, [isC1Completed, completeChallenge, confirmAnomaly]);
 
+  const handleConfirm = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    SoundFX.playTick();
+
+    if (!tokenInput.trim()) {
+      setErrorMsg('Please enter the anomaly signature token discovered in the DOM.');
+      return;
+    }
+
+    const res = confirmAnomaly(tokenInput.trim());
+    if (res.success || tokenInput.trim().toUpperCase() === ANOMALY_CODE) {
+      SoundFX.playSupernova();
+      setTokenInput('');
+    } else {
+      SoundFX.playWarning();
+      setErrorMsg('Invalid anomaly signature. Ensure you inspect the target DOM element in DevTools.');
+    }
+  };
 
   return (
     <div className="space-y-6 font-mono">
-      {/* Telemetry Header */}
-      <div className="border border-noir-border/80 bg-noir-surface/90 rounded p-4 sm:p-5 backdrop-blur-md">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div
-              className={`p-2 rounded border transition-colors ${
-                isC1Completed
-                  ? 'bg-signal-cyan/15 border-signal-cyan/40 text-signal-cyan'
-                  : 'bg-signal-amber/15 border-signal-amber/40 text-signal-amber'
-              }`}
-            >
-              {isC1Completed ? <Zap className="w-5 h-5" /> : <Radio className="w-5 h-5" />}
+      {/* 1. Anomaly Banner */}
+      <div className="bg-space-900 border border-amber/30 rounded-lg p-5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-amber/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-2">
+          <div>
+            <div className="flex items-center gap-2 text-amber text-xs font-bold tracking-widest uppercase mb-1">
+              <Search className="w-4 h-4" /> METADATA ANOMALY DETECTOR
             </div>
-            <div>
-              <div className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">
-                SECTOR 0x7749 // ANOMALY TELEMETRY
-              </div>
-              <h2 className="font-display font-bold text-xl text-amber-300 tracking-tight drop-shadow-[0_0_10px_rgba(255,180,84,0.25)]">
-                CONTAINMENT ISOLATOR
-              </h2>
-            </div>
+            <h2 className="font-display font-black text-xl md:text-2xl text-slate-100 tracking-wider">
+              DOM INSPECTION CHAMBER
+            </h2>
           </div>
 
-          <div className="flex items-center gap-2 text-xs">
-            {isC1Completed ? (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-cyan/15 border border-signal-cyan/40 text-signal-cyan font-bold">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                OVERRIDE VERIFIED
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber animate-pulse font-bold">
-                <ShieldAlert className="w-3.5 h-3.5" />
-                QUARANTINE ACTIVE
-              </span>
+          <div
+            className={`px-3 py-1 rounded text-xs font-mono border ${
+              isAnomalyConfirmed || isC1Completed
+                ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold'
+                : 'bg-amber/10 border-amber/40 text-amber'
+            }`}
+          >
+            ANOMALY: {isAnomalyConfirmed || isC1Completed ? 'VERIFIED & LINKED' : 'UNCONFIRMED SIGNATURE'}
+          </div>
+        </div>
+
+        <p className="text-slate-400 text-xs leading-relaxed max-w-3xl font-sans">
+          A corrupted packet embedded in this page&apos;s Document Object Model (DOM) contains hidden telemetry metadata required for vault verification.
+        </p>
+      </div>
+
+      {/* 2. DevTools Briefing & Designated DOM Element */}
+      <div className="bg-space-900 border border-slate-800 rounded-lg p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <Code className="w-4 h-4 text-amber" />
+          <h3 className="font-display font-bold text-base text-slate-200">
+            BROWSER DEVTOOLS INSTRUCTIONS
+          </h3>
+        </div>
+
+        <div className="bg-space-950 p-4 rounded-lg border border-slate-800 space-y-2 mb-5 text-xs text-slate-300 font-sans">
+          <p>
+            1. Open Developer Tools by pressing{' '}
+            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">F12</kbd> (or{' '}
+            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">Ctrl + Shift + I</kbd> /{' '}
+            <kbd className="px-1.5 py-0.5 rounded bg-space-900 border border-slate-700 font-mono text-cyan">Cmd + Option + I</kbd>).
+          </p>
+          <p>
+            2. Go to the <strong>Elements</strong> / <strong>Inspector</strong> panel.
+          </p>
+          <p>
+            3. Locate the target DOM elements below to extract the token, or override the containment protocol in real time.
+          </p>
+        </div>
+
+        {/* Surprise Challenge C1: Containment Isolator Node with Supernova Canvas */}
+        <div className="mb-6">
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>CONTAINMENT ISOLATOR CHAMBER (TRACK OMEGA CHALLENGE C1):</span>
+            <span className={isC1Completed ? 'text-cyan font-bold' : 'text-amber font-semibold'}>
+              {isC1Completed ? 'BREACH PROTOCOL OVERRIDDEN' : 'MUTATE ATTRIBUTE TO "OVERRIDE"'}
+            </span>
+          </div>
+
+          <div
+            id={CONTAINMENT_ELEMENT_ID}
+            ref={containmentNodeRef}
+            data-containment-protocol={isC1Completed ? 'OVERRIDE' : 'RESTRICTED'}
+            data-signal-anomaly={ANOMALY_CODE}
+            data-transmission-anomaly={ANOMALY_CODE}
+            className={`relative p-6 rounded-lg border transition-all duration-700 overflow-hidden text-center ${
+              isC1Completed
+                ? 'border-cyan/50 bg-space-950 shadow-[0_0_30px_rgba(0,240,255,0.15)]'
+                : 'border-dashed border-amber/40 bg-space-950 hover:border-amber'
+            }`}
+          >
+            {/* Supernova Singular Canvas on Breach */}
+            {isC1Completed && (
+              <SupernovaCanvas active={true} className="z-0 opacity-75" />
             )}
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex items-center justify-center gap-2 text-xs font-bold">
+                {isC1Completed ? (
+                  <span className="text-cyan flex items-center gap-1.5 font-bold">
+                    <Zap className="w-4 h-4 text-cyan animate-bounce" />
+                    &lt;div id=&quot;{CONTAINMENT_ELEMENT_ID}&quot; data-containment-protocol=&quot;OVERRIDE&quot;&gt;
+                  </span>
+                ) : (
+                  <span className="text-amber flex items-center gap-1.5">
+                    <ShieldAlert className="w-4 h-4 text-amber animate-pulse" />
+                    &lt;div id=&quot;{CONTAINMENT_ELEMENT_ID}&quot; data-containment-protocol=&quot;RESTRICTED&quot;&gt;
+                  </span>
+                )}
+              </div>
+
+              <p className="text-xs text-slate-400 max-w-lg mx-auto font-sans">
+                {isC1Completed ? (
+                  <span className="text-cyan font-semibold">
+                    SURPRISE CHALLENGE C1 SOLVED: Live DOM mutation detected! Containment disengaged, Supernova cosmic singularity triggered, and Anomaly token verified.
+                  </span>
+                ) : (
+                  <span>
+                    Inspect this element in DevTools. Mutate attribute{' '}
+                    <code className="text-cyan font-bold px-1 py-0.5 rounded bg-space-900 border border-slate-700">
+                      {CONTAINMENT_ATTRIBUTE}
+                    </code>{' '}
+                    from &quot;RESTRICTED&quot; to <strong className="text-amber">&quot;OVERRIDE&quot;</strong> to disengage containment.
+                  </span>
+                )}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Primary Visual: Containment Isolator Chamber */}
-      <div
-        id={CONTAINMENT_ELEMENT_ID}
-        ref={containmentNodeRef}
-        data-signal-anomaly={ANOMALY_CODE}
-        className={`relative rounded border p-8 sm:p-12 overflow-hidden transition-all duration-700 flex flex-col items-center justify-center text-center min-h-[380px] ${
-          isC1Completed
-            ? 'border-signal-cyan/50 bg-gradient-to-b from-signal-cyan/10 via-noir-surface to-noir-base shadow-[0_0_50px_rgba(34,211,238,0.12)]'
-            : 'border-signal-amber/30 bg-noir-surface/90 hover:border-signal-amber/50 shadow-[0_0_30px_rgba(255,180,84,0.05)]'
-        }`}
-      >
-        {/* Real-time Supernova Cosmic Burst on Breach */}
-        {isC1Completed && (
-          <SupernovaCanvas active={true} className="z-0 opacity-80" />
-        )}
+        {/* Standard Anomaly Node: #anomaly-node */}
+        <div className="mb-6">
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>TELEMETRY METADATA NODE:</span>
+            <span className="text-amber">INSPECT THIS ELEMENT IN DEVTOOLS</span>
+          </div>
 
-        {/* Radar & Forcefield Grid Overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:24px_24px]" />
-
-        {/* Pulsing Concentric Forcefield Rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div
-            className={`w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-dashed transition-all duration-1000 ${
-              isC1Completed
-                ? 'border-signal-cyan/30 animate-[spin_40s_linear_infinite]'
-                : 'border-signal-amber/20 animate-[spin_60s_linear_infinite]'
-            }`}
-          />
-          <div
-            className={`absolute w-48 h-48 sm:w-64 sm:h-64 rounded-full border transition-all duration-700 ${
-              isC1Completed
-                ? 'border-signal-cyan/40 shadow-[0_0_30px_rgba(34,211,238,0.15)]'
-                : 'border-signal-amber/30 animate-pulse'
-            }`}
-          />
+            id="anomaly-node"
+            data-transmission-anomaly={ANOMALY_CODE}
+            data-transmission-origin="DEEP_SPACE_ARRAY_7"
+            data-protocol-version="TLS-OMEGA-1.0"
+            className="p-4 rounded-lg bg-space-950 border border-slate-800 font-mono text-xs text-slate-400 select-all hover:border-amber transition-colors"
+          >
+            <div className="flex items-center gap-2 text-amber text-[11px] font-bold mb-1">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span>&lt;div id=&quot;anomaly-node&quot; data-transmission-anomaly=&quot;{isAnomalyConfirmed ? ANOMALY_CODE : '...'}&quot;&gt;</span>
+            </div>
+            <div className="text-[11px] text-slate-400">
+              [SYSTEM NOTE: Inspect DOM attributes to extract the anomaly authorization token: <span className="text-cyan font-bold">{ANOMALY_CODE}</span>]
+            </div>
+          </div>
         </div>
 
-        {/* Center Node Core */}
-        <div className="relative z-10 max-w-xl mx-auto space-y-6">
-          {!isC1Completed ? (
-            <>
-              {/* Core Icon */}
-              <div className="w-16 h-16 mx-auto rounded-full bg-noir-base border border-signal-amber/40 flex items-center justify-center text-signal-amber shadow-[0_0_20px_rgba(255,180,84,0.2)]">
-                <ShieldAlert className="w-8 h-8 animate-pulse" />
-              </div>
+        {/* Confirmation Form */}
+        <div className="border-t border-slate-800 pt-5">
+          <h4 className="font-display font-bold text-sm text-slate-200 mb-2">
+            SUBMIT EXTRACTED ANOMALY TOKEN
+          </h4>
 
-              {/* Status Header */}
-              <div className="space-y-1">
-                <div className="text-[10px] text-amber-400 font-bold tracking-widest uppercase">
-                  CONTAINMENT PROTOCOL RESTRICTED
-                </div>
-                <div className="font-display font-extrabold text-2xl sm:text-3xl text-amber-300 tracking-wide drop-shadow-[0_0_12px_rgba(255,180,84,0.3)]">
-                  ISOLATOR NODE #0x7749
-                </div>
-              </div>
-
-              {/* Minimal Tactical Metadata */}
-              <div className="p-3.5 rounded bg-noir-base/80 border border-noir-border/80 inline-flex flex-wrap items-center justify-center gap-4 text-xs text-signal-dim">
-                <div>
-                  NODE: <span className="text-cyan-300 font-bold">#{CONTAINMENT_ELEMENT_ID}</span>
-                </div>
-                <div className="text-noir-border">//</div>
-                <div>
-                  PROTOCOL: <span className="text-amber-400 font-bold">&quot;RESTRICTED&quot;</span>
-                </div>
-              </div>
-
-              {/* Single Atmospheric Hacker Directive */}
-              <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-                Quarantine locks isolate this carrier packet. Inspect this DOM node in DevTools and mutate{' '}
-                <code className="text-signal-cyan px-1.5 py-0.5 rounded bg-noir-base border border-signal-cyan/30 font-bold">
-                  {CONTAINMENT_ATTRIBUTE}
-                </code>{' '}
-                to <span className="text-amber-300 font-bold">&quot;OVERRIDE&quot;</span> to disengage containment.
-              </p>
-            </>
-          ) : (
-            /* CINEMATIC PLOT TWIST REVELATION */
-            <div className={`space-y-5 animate-in fade-in zoom-in-95 duration-500`}>
-              <div className="w-16 h-16 mx-auto rounded-full bg-signal-cyan/15 border border-signal-cyan flex items-center justify-center text-signal-cyan shadow-[0_0_30px_rgba(34,211,238,0.4)]">
-                <Zap className="w-8 h-8" />
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-xs text-signal-cyan font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-signal-cyan animate-ping" />
-                  CONTAINMENT OVERRIDDEN // PLOT TWIST UNLOCKED
-                </div>
-                <div className="font-display font-extrabold text-2xl sm:text-3xl text-signal-text tracking-tight">
-                  THE TRANSMISSION IS INTERNAL
-                </div>
-              </div>
-
-              <div className="p-4 rounded bg-noir-base/90 border border-signal-cyan/40 text-xs sm:text-sm text-signal-text leading-relaxed text-left max-w-lg mx-auto shadow-xl">
-                <div className="text-[10px] text-signal-cyan font-bold tracking-widest mb-1.5">
-                  // DECRYPTED FLIGHT RECORDER LOG:
-                </div>
-                The anomaly is not an alien carrier. It is an automated evacuation beacon transmitted by this very machine prior to system shutdown.
-              </div>
-
-              <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-signal-dim pt-1">
-                <div>
-                  CARRIER TOKEN: <span className="text-signal-amber font-bold tracking-wider">{ANOMALY_CODE}</span>
-                </div>
-                <div className="text-noir-border">//</div>
-                <div className="text-signal-cyan">
-                  SYNCHRONIZED ACROSS ALL 3 TERMINALS
-                </div>
+          {isAnomalyConfirmed || isC1Completed ? (
+            <div className="p-4 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-3">
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div>
+                <strong className="block text-sm text-emerald-200">
+                  ANOMALY TOKEN VERIFIED: {ANOMALY_CODE}
+                </strong>
+                <span className="font-sans">DOM metadata successfully verified and synchronized to all mission terminals.</span>
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          ) : (
+            <form onSubmit={handleConfirm} className="space-y-3">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="e.g. SIG-7749-OMEGA"
+                  value={tokenInput}
+                  onChange={(e) => {
+                    setTokenInput(e.target.value.toUpperCase());
+                    setErrorMsg(null);
+                  }}
+                  className="flex-1 bg-space-950 border border-slate-700 rounded px-3 py-2 text-sm font-mono tracking-wider text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-amber"
+                />
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded text-xs font-bold uppercase tracking-wider bg-amber hover:bg-amber/90 text-slate-950 transition-all flex items-center gap-2 shadow-lg shadow-amber/20"
+                >
+                  <Send className="w-4 h-4" /> CONFIRM
+                </button>
+              </div>
 
-      {/* Compact Terminal Readout */}
-      <div className="border border-noir-border/80 bg-noir-surface/70 rounded px-4 py-3 flex items-center justify-between text-xs text-signal-dim">
-        <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-signal-cyan" />
-          <span>SCOPED DOM OBSERVER ACTIVE</span>
-        </div>
-        <div className="text-[11px] text-signal-muted">
-          TARGET: #{CONTAINMENT_ELEMENT_ID}
+              {errorMsg && (
+                <div className="p-2.5 rounded bg-rose-950/40 border border-rose-600/40 text-rose-300 text-xs flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+            </form>
+          )}
         </div>
       </div>
     </div>

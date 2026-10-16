@@ -3,12 +3,16 @@ import { useMission } from '../../hooks/useMission';
 import { MissionRole } from '../../engine/missionTypes';
 import { SignalHero } from '../common/SignalHero';
 import {
-  ArrowRight,
+  Radio,
+  Terminal,
+  Key,
+  Search,
   ExternalLink,
+  ArrowRight,
+  Sparkles,
   Volume2,
   VolumeX,
   RotateCcw,
-  Sparkles,
 } from 'lucide-react';
 
 interface LandingScreenProps {
@@ -20,8 +24,6 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
   onStartMission,
   onDemoSolve,
 }) => {
-
-
   const {
     state,
     connectedTabs,
@@ -39,159 +41,160 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
     onStartMission('transmission');
   };
 
-  const handleInitiateRecovery = () => {
+  const handleInitiateSingleTab = () => {
     startMission();
     onStartMission('transmission');
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-16 max-w-5xl mx-auto z-10">
-      {/* Top Classified Header & Custom Insignia */}
-      <header className="flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-signal-muted border-b border-noir-border pb-5">
-        <div className="flex items-center gap-3">
-          {/* Custom Mission Insignia SVG */}
-          <div className="w-8 h-8 rounded border border-signal-cyan/40 bg-noir-surface flex items-center justify-center text-signal-cyan">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M12 2v3m0 14v3M2 12h3m14 0h3" />
-              <circle cx="12" cy="12" r="8" strokeDasharray="3 3" />
-            </svg>
+    <div className="relative min-h-[92vh] flex flex-col justify-between p-4 sm:p-8 max-w-5xl mx-auto z-10 font-mono">
+      {/* Glow Backdrop */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan/15 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Top Utility Header */}
+      <header className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400 border-b border-slate-800/80 pb-4">
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <Radio className="w-4 h-4 text-cyan animate-pulse" />
+            <div className="absolute -inset-1 bg-cyan/20 rounded-full blur-sm -z-10" />
           </div>
-          <div>
-            <div className="text-cyan-300 font-extrabold tracking-widest uppercase text-xs drop-shadow-[0_0_8px_rgba(34,211,238,0.25)]">
-              SEC-SYS // CLASSIFIED TRANSMISSION RELAY
-            </div>
-            <div className="text-[10px] text-cyan-400/70 font-mono">
-              CASE: <span className="text-cyan-300 font-bold">{state.missionId}</span> // CLEARANCE: LEVEL 5
-            </div>
-          </div>
+          <span className="text-slate-200 font-bold tracking-wider">SEC-SYS // CLASSIFIED</span>
+          <span className="text-slate-600">//</span>
+          <span className="text-cyan font-bold">{state.missionId}</span>
         </div>
 
-        <div className="flex items-center gap-4 text-xs font-mono">
-          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-signal-amber/10 border border-signal-amber/30 text-signal-amber text-[10px] tracking-widest font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-signal-amber animate-pulse" />
-            TRACK OMEGA // PHASE 01
-          </div>
-
-          <div className="text-signal-muted">
-            TERMINALS: <span className="text-signal-cyan font-bold">{connectedTabs}</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-space-900 border border-slate-800 text-[11px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <span className="text-slate-300">
+              TERMINALS: <strong className="text-cyan font-bold">{connectedTabs}</strong>
+            </span>
           </div>
 
           <button
             onClick={toggleAudio}
-            className="p-1.5 rounded border border-noir-border hover:border-signal-cyan/40 text-signal-muted hover:text-signal-cyan transition-colors"
-            title={isAudioEnabled ? 'Mute' : 'Enable Audio'}
+            className="p-1.5 rounded bg-space-900 border border-slate-800 text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
+            title={isAudioEnabled ? 'Mute Audio' : 'Unmute Audio'}
           >
             {isAudioEnabled ? (
-              <Volume2 className="w-4 h-4 text-signal-cyan" />
+              <Volume2 className="w-3.5 h-3.5 text-cyan" />
             ) : (
-              <VolumeX className="w-4 h-4 text-signal-dim" />
+              <VolumeX className="w-3.5 h-3.5 text-slate-500" />
             )}
           </button>
 
           {state.revision > 1 && (
             <button
               onClick={() => resetMission()}
-              className="text-xs text-signal-dim hover:text-signal-amber flex items-center gap-1.5 transition-colors"
+              className="text-xs text-slate-500 hover:text-amber transition-colors flex items-center gap-1"
               title="Reset progress"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-3 h-3" />
               <span>RESET</span>
             </button>
           )}
         </div>
       </header>
 
-      {/* Main Narrative & Hero Signal Composition */}
-      <div className="my-auto py-12 lg:py-16 space-y-8">
-        <div className="space-y-4 max-w-2xl">
-          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-signal-cyan uppercase">
-            <span className="w-2 h-2 rounded-full bg-signal-cyan animate-pulse shadow-[0_0_8px_#22d3ee]" />
-            <span>// INTERCEPT CAPTURED</span>
-            <span className="text-noir-border">//</span>
-            <span className="text-signal-amber font-semibold">CARRIER: 1420.405 MHz</span>
-          </div>
-
-          <h1 className="font-display font-extrabold text-5xl sm:text-7xl lg:text-8xl tracking-tight leading-none bg-gradient-to-r from-signal-cyan via-white to-signal-violet bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(34,211,238,0.22)] select-none">
-            THE LAST SIGNAL
-          </h1>
-
-          <p className="font-display text-xl sm:text-2xl text-slate-200 font-normal leading-relaxed">
-            A transmission was received. <span className="text-signal-cyan font-semibold drop-shadow-[0_0_10px_rgba(34,211,238,0.35)]">Its origin is unknown.</span>
-          </p>
-
-          <p className="font-mono text-xs sm:text-sm text-slate-400 leading-relaxed max-w-xl">
-            Its contents are incomplete, <span className="text-signal-violet font-semibold">encrypted</span>, and decentralized across <span className="text-signal-cyan font-semibold">three browser tabs</span>.
-            Investigate the carrier frequency, recover the <span className="text-signal-violet font-semibold">cipher shift</span>, inspect hidden <span className="text-signal-amber font-semibold">DOM metadata</span>,
-            and satisfy the temporal alignment window to unlock the digital vault.
-          </p>
+      {/* Main Hero & Content Center */}
+      <div className="my-auto py-8 sm:py-12 text-center space-y-6">
+        {/* Live Transmission Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-space-900 border border-cyan/40 text-cyan text-xs font-bold tracking-widest uppercase shadow-lg shadow-cyan/10">
+          <span className="w-2 h-2 rounded-full bg-cyan animate-ping inline-block" />
+          <Radio className="w-3.5 h-3.5" /> LIVE CLASSIFIED TRANSMISSION DETECTED
         </div>
 
-        {/* Primary Visual: Beautiful Animated Oscilloscope Waveform */}
-        <div className="max-w-4xl">
-          <SignalHero />
+        {/* Title */}
+        <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl text-slate-100 tracking-wider leading-none select-none">
+          THE LAST SIGNAL
+        </h1>
+
+        <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto font-mono leading-relaxed">
+          Three tabs. Three clues. One last transmission. An encrypted deep-space telemetry signal has fragmented across orbital frequencies. Collaborate across browser windows to decode the signal and breach the digital vault.
+        </p>
+
+        {/* Real-time Oscilloscope Carrier Wave */}
+        <div className="max-w-3xl mx-auto py-2">
+          <SignalHero compact={true} />
         </div>
 
-        {/* Case Metadata & Primary Prominent Action */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-4 border-t border-noir-border">
-          <div className="font-mono text-xs text-signal-dim space-y-1">
-            <div>CARRIER FREQUENCY : <span className="text-signal-cyan font-bold tracking-wider">1420.405 MHz</span></div>
-            <div>TRANSMISSION ROLE : <span className="text-signal-violet font-bold tracking-wider">3 TABS SYNCHRONIZED</span></div>
+        {/* 3 Mission Roles Showcase */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-3xl mx-auto text-left">
+          <div className="p-4 rounded-lg bg-space-900/90 border border-cyan/30 hover:border-cyan transition-all group shadow-sm">
+            <div className="flex items-center gap-2 text-cyan text-xs font-bold uppercase tracking-wider mb-2">
+              <Terminal className="w-4 h-4" /> TAB 1 // TRANSMISSION
+            </div>
+            <p className="text-slate-400 text-xs leading-relaxed font-sans">
+              Interception of the raw encrypted message and final temporal vault access terminal.
+            </p>
           </div>
 
+          <div className="p-4 rounded-lg bg-space-900/90 border border-violet/30 hover:border-violet transition-all group shadow-sm">
+            <div className="flex items-center gap-2 text-violet text-xs font-bold uppercase tracking-wider mb-2">
+              <Key className="w-4 h-4" /> TAB 2 // CIPHER KEY
+            </div>
+            <p className="text-slate-400 text-xs leading-relaxed font-sans">
+              Deconvolving carrier telemetry to recover the Caesar shift index and broadcast to peers.
+            </p>
+          </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <button
-              onClick={handleInitiateRecovery}
-              className="px-8 py-4 rounded bg-signal-cyan hover:bg-[#38BDF8] text-[#070A12] font-display font-bold text-sm tracking-widest uppercase transition-all flex items-center justify-center gap-3 active:scale-98 shadow-sm"
-            >
-              <span>INITIATE RECOVERY</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={handleLaunchAllTabs}
-              className="px-5 py-4 rounded border border-signal-cyan/40 bg-noir-surface hover:bg-noir-elevated text-cyan-300 font-display font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-[0_0_12px_rgba(34,211,238,0.1)] hover:border-signal-cyan"
-              title="Opens Transmission, Key, and Anomaly in 3 separate windows"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-signal-cyan" />
-              <span>LAUNCH 3 WINDOWS</span>
-            </button>
-
-            {onDemoSolve && (
-              <button
-                onClick={onDemoSolve}
-                className="px-4 py-4 rounded border border-signal-cyan/40 bg-signal-cyan/10 hover:bg-signal-cyan/20 text-signal-cyan font-display font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(34,211,238,0.15)] active:scale-95"
-                title="Instant demo unlock with Supernova burst (Shortcut: Ctrl+Shift+D)"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-signal-cyan animate-pulse" />
-                <span>DEMO VAULT</span>
-              </button>
-            )}
+          <div className="p-4 rounded-lg bg-space-900/90 border border-amber/30 hover:border-amber transition-all group shadow-sm">
+            <div className="flex items-center gap-2 text-amber text-xs font-bold uppercase tracking-wider mb-2">
+              <Search className="w-4 h-4" /> TAB 3 // DOM ANOMALY
+            </div>
+            <p className="text-slate-400 text-xs leading-relaxed font-sans">
+              Investigate page Document Object Model attributes using browser DevTools (F12).
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Footer System Classification */}
-      <footer className="border-t border-noir-border pt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-signal-dim">
-        <div>TRACK OMEGA // MYSTERY BOX // CINEMATIC SIGNAL NOIR</div>
-        <div className="flex items-center gap-4">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+          <button
+            onClick={handleLaunchAllTabs}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-lg font-display font-bold text-xs tracking-wider uppercase bg-cyan hover:bg-cyan/90 text-slate-950 transition-all flex items-center justify-center gap-2.5 shadow-xl shadow-cyan/25 group active:scale-98"
+          >
+            <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            START INVESTIGATION (OPEN 3 TABS)
+          </button>
+
+          <button
+            onClick={handleInitiateSingleTab}
+            className="w-full sm:w-auto px-6 py-3.5 rounded-lg font-mono font-semibold text-xs tracking-wider uppercase bg-space-900 hover:bg-space-850 border border-slate-700 text-slate-300 transition-all flex items-center justify-center gap-2"
+          >
+            ENTER SINGLE TAB MODE <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+
           {onDemoSolve && (
             <button
               onClick={onDemoSolve}
-              className="text-signal-dim hover:text-signal-cyan transition-colors flex items-center gap-1 font-mono"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-lg font-display font-bold text-xs tracking-wider uppercase bg-space-900 hover:bg-space-850 border border-cyan/40 text-cyan transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan/10"
+              title="Instant demo unlock with Supernova singularity burst (Shortcut: Ctrl+Shift+D)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan animate-pulse" />
+              DEMO VAULT
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Footer Classification */}
+      <footer className="border-t border-slate-800/80 pt-4 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500 font-mono">
+        <div>PROTOCOL: BROADCASTCHANNEL API // LOCALSTORAGE SYNC FALLBACK // SHA-256 VAULT</div>
+        <div className="flex items-center gap-3">
+          {onDemoSolve && (
+            <button
+              onClick={onDemoSolve}
+              className="text-slate-400 hover:text-cyan transition-colors flex items-center gap-1"
             >
               <span>⚡</span>
               <span>JUDGE DEMO (Ctrl+Shift+D)</span>
             </button>
           )}
-          <span className="text-noir-border">//</span>
-          <span>BROADCASTCHANNEL SYNC</span>
-          <span className="text-noir-border">//</span>
-          <span>SHA-256 ENCRYPTION</span>
+          <span>//</span>
+          <span>TRACK OMEGA</span>
         </div>
       </footer>
     </div>
   );
 };
-
