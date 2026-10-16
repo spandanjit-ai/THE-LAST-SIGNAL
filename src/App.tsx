@@ -3,6 +3,7 @@ import { MissionProvider, useMission } from './hooks/useMission';
 import { BackgroundFX } from './components/common/BackgroundFX';
 import { HeaderNav } from './components/common/HeaderNav';
 import { SignalHero } from './components/common/SignalHero';
+import { SynchronizedNodeMesh } from './components/common/SynchronizedNodeMesh';
 import { EvidenceDossier } from './components/common/EvidenceDossier';
 import { LandingScreen } from './components/landing/LandingScreen';
 import { TransmissionRole } from './components/roles/TransmissionRole';
@@ -55,6 +56,9 @@ const MissionApp: React.FC = () => {
       <main className="relative z-10 flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
         {/* The Signal Hero: Real-time carrier oscilloscope responding to temporal phase */}
         <SignalHero compact={true} />
+
+        {/* Interconnected Machine Topology Nodes */}
+        <SynchronizedNodeMesh />
 
         {/* Primary Puzzle Workspace */}
         <section aria-label="Active Mission Terminal">

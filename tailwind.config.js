@@ -7,49 +7,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        space: {
-          950: '#020408',
-          900: '#040814',
-          850: '#070f23',
-          800: '#0b1636',
-          700: '#11224f',
+        noir: {
+          base: '#070A12',
+          surface: '#101827',
+          elevated: '#172236',
+          border: 'rgba(255, 255, 255, 0.08)',
+          subtle: 'rgba(255, 255, 255, 0.04)',
         },
-        cyan: {
-          glow: '#00f0ff',
-          neon: '#22d3ee',
-          dim: '#0e7490',
+        signal: {
+          cyan: '#22D3EE',
+          violet: '#8B7CFF',
+          amber: '#FFB454',
+          text: '#E8EDF5',
+          muted: '#8A99AD',
+          dim: '#4D5B6E',
         },
-        violet: {
-          glow: '#a855f7',
-          neon: '#c084fc',
-          dim: '#6b21a8',
-        },
-        amber: {
-          warning: '#f59e0b',
-          dim: '#b45309',
-        }
       },
       fontFamily: {
-        mono: ['JetBrains Mono', 'Fira Code', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-        display: ['Rajdhani', 'Orbitron', 'Inter', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'JetBrains Mono', 'SFMono-Regular', 'monospace'],
+      },
+      borderRadius: {
+        DEFAULT: '2px',
+        sm: '1px',
+        md: '4px',
+        lg: '6px',
+        xl: '8px',
       },
       animation: {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'spin-slow': 'spin 20s linear infinite',
-        'reverse-spin': 'reverseSpin 25s linear infinite',
-        'scanline': 'scanline 8s linear infinite',
+        'spin-slow': 'spin 24s linear infinite',
+        'reverse-spin': 'reverseSpin 28s linear infinite',
       },
       keyframes: {
         reverseSpin: {
           'from': { transform: 'rotate(360deg)' },
           'to': { transform: 'rotate(0deg)' },
         },
-        scanline: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(1000%)' },
-        }
-      }
+      },
     },
   },
   plugins: [],
-}
+};

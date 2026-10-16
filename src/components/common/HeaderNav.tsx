@@ -37,41 +37,46 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
     },
     {
       id: 'key',
-      label: 'KEY RECOVERY',
+      label: 'DECRYPTION KEY',
       number: '02',
       completed: state.completedStages.key || state.keyDiscovered,
     },
     {
       id: 'anomaly',
-      label: 'DOM ANOMALY',
+      label: 'ANOMALY',
       number: '03',
       completed: state.completedStages.anomaly || state.anomalyConfirmed,
     },
   ];
 
   return (
-    <header className="relative z-30 border-b border-slate-800 bg-space-950/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+    <header className="relative z-30 border-b border-noir-border bg-noir-base/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3">
+      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
         {/* Brand identity & Mission ID */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setRole(null)}
             className="flex items-center gap-2.5 text-left group focus:outline-none"
-            title="Return to Mission Overview"
+            title="Return to Overview"
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+            <div className="w-6 h-6 rounded border border-signal-cyan/40 bg-noir-surface flex items-center justify-center text-signal-cyan">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 2v3m0 14v3M2 12h3m14 0h3" />
+              </svg>
+            </div>
             <div>
-              <div className="font-display font-bold tracking-widest text-base text-white group-hover:text-cyan-300 transition-colors">
+              <div className="font-display font-bold tracking-tight text-sm sm:text-base text-signal-text group-hover:text-signal-cyan transition-colors">
                 THE LAST SIGNAL
               </div>
-              <div className="text-[10px] font-mono text-slate-500">
-                SESSION: {state.missionId} // REV {state.revision}
+              <div className="text-[10px] font-mono text-signal-dim">
+                RELAY: {state.missionId} // REV {state.revision}
               </div>
             </div>
           </button>
         </div>
 
-        {/* Tab Role Switcher Tabs */}
+        {/* Tab Role Switcher */}
         <nav className="flex items-center gap-1 sm:gap-2 font-mono text-xs">
           {roles.map((r) => {
             const isActive = currentRole === r.id;
@@ -81,14 +86,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
                 onClick={() => setRole(r.id)}
                 className={`px-3 py-1.5 rounded transition-all flex items-center gap-2 border ${
                   isActive
-                    ? 'border-cyan-500/50 bg-cyan-950/40 text-cyan-300 font-bold'
-                    : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-space-900'
+                    ? 'border-signal-cyan/50 bg-noir-surface text-signal-cyan font-bold'
+                    : 'border-transparent text-signal-muted hover:text-signal-text hover:bg-noir-surface/60'
                 }`}
               >
-                <span className="text-[10px] text-slate-500">{r.number}</span>
+                <span className="text-[10px] text-signal-dim">{r.number}</span>
                 <span>{r.label}</span>
                 {r.completed && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan" />
                 )}
               </button>
             );
@@ -96,15 +101,15 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
         </nav>
 
         {/* Right utility cluster */}
-        <div className="flex items-center gap-3 font-mono text-xs">
-          {/* Real connected tabs counter */}
+        <div className="flex items-center gap-2.5 font-mono text-xs">
+          {/* Connected tabs count */}
           <div
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded border border-slate-800 bg-space-900 text-slate-300 text-[11px]"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded border border-noir-border bg-noir-surface text-signal-muted text-[11px]"
             title="Connected browser tabs via BroadcastChannel"
           >
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <Layers className="w-3.5 h-3.5 text-signal-cyan" />
             <span>
-              <strong className="text-cyan-300">{connectedTabs}</strong> {connectedTabs === 1 ? 'TAB' : 'TABS'}
+              <strong className="text-signal-cyan">{connectedTabs}</strong> {connectedTabs === 1 ? 'TAB' : 'TABS'}
             </span>
           </div>
 
@@ -113,18 +118,18 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
             onClick={onOpenVaultModal}
             className={`px-3 py-1 rounded border flex items-center gap-1.5 font-display font-bold text-xs tracking-wider uppercase transition-all ${
               state.unlockStatus === 'UNLOCKED'
-                ? 'border-emerald-500/50 bg-emerald-950/40 text-emerald-300'
-                : 'border-slate-700 bg-space-900 text-slate-200 hover:border-cyan-500/40 hover:text-cyan-300'
+                ? 'border-signal-cyan/60 bg-noir-surface text-signal-cyan'
+                : 'border-noir-border bg-noir-surface text-signal-text hover:border-signal-cyan/40 hover:text-signal-cyan'
             }`}
           >
             {state.unlockStatus === 'UNLOCKED' ? (
               <>
-                <Unlock className="w-3.5 h-3.5 text-emerald-400" />
+                <Unlock className="w-3.5 h-3.5 text-signal-cyan" />
                 <span>ARCHIVE OPEN</span>
               </>
             ) : (
               <>
-                <Lock className="w-3.5 h-3.5 text-slate-400" />
+                <Lock className="w-3.5 h-3.5 text-signal-dim" />
                 <span>VAULT GATE</span>
               </>
             )}
@@ -134,12 +139,12 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
           <button
             onClick={toggleAudio}
             title={isAudioEnabled ? 'Mute' : 'Enable Audio'}
-            className="p-1.5 rounded border border-slate-800 hover:border-slate-600 text-slate-400 hover:text-cyan-300 transition-colors"
+            className="p-1.5 rounded border border-noir-border hover:border-signal-cyan/40 text-signal-muted hover:text-signal-cyan transition-colors"
           >
             {isAudioEnabled ? (
-              <Volume2 className="w-4 h-4 text-cyan-400" />
+              <Volume2 className="w-4 h-4 text-signal-cyan" />
             ) : (
-              <VolumeX className="w-4 h-4 text-slate-600" />
+              <VolumeX className="w-4 h-4 text-signal-dim" />
             )}
           </button>
 
@@ -147,7 +152,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
           <button
             onClick={() => setShowResetConfirm(true)}
             title="Reset Mission"
-            className="p-1.5 rounded border border-slate-800 hover:border-amber-500/40 text-slate-500 hover:text-amber-400 transition-colors"
+            className="p-1.5 rounded border border-noir-border hover:border-signal-amber/40 text-signal-dim hover:text-signal-amber transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
@@ -156,19 +161,19 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
 
       {/* Reset Confirmation Dialog */}
       {showResetConfirm && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-space-900 border border-slate-700 p-6 rounded-lg max-w-md w-full shadow-2xl">
-            <div className="flex items-center gap-3 text-amber-400 mb-3">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-noir-surface border border-noir-border p-6 rounded max-w-md w-full shadow-2xl">
+            <div className="flex items-center gap-3 text-signal-amber mb-3">
               <AlertTriangle className="w-5 h-5" />
               <h3 className="font-display text-lg font-bold">REINITIALIZE MISSION?</h3>
             </div>
-            <p className="text-slate-300 text-xs font-mono leading-relaxed mb-6">
+            <p className="text-signal-muted text-xs font-mono leading-relaxed mb-6">
               This will reset all recovered clues, cipher translations, and security locks across all connected browser tabs.
             </p>
             <div className="flex justify-end gap-3 font-mono text-xs">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="px-4 py-2 rounded border border-slate-700 text-slate-300 hover:bg-space-950 transition-colors"
+                className="px-4 py-2 rounded border border-noir-border text-signal-muted hover:bg-noir-base transition-colors"
               >
                 CANCEL
               </button>
@@ -177,7 +182,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
                   resetMission();
                   setShowResetConfirm(false);
                 }}
-                className="px-4 py-2 rounded bg-amber-500 text-space-950 font-bold hover:bg-amber-400 transition-colors"
+                className="px-4 py-2 rounded bg-signal-amber text-[#070A12] font-bold hover:bg-[#FBBF24] transition-colors"
               >
                 CONFIRM RESET
               </button>

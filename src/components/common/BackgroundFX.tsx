@@ -6,11 +6,10 @@ export const BackgroundFX: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animId: number;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
@@ -22,47 +21,32 @@ export const BackgroundFX: React.FC = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // Particle nodes for digital starfield / signal dust
-    const PARTICLE_COUNT = 60;
-    const particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      radius: number;
-      alpha: number;
-      color: string;
-    }> = [];
+    // Very sparse, quiet ambient digital dust (only 25 subtle nodes)
+    const DUST_COUNT = 24;
+    const particles = Array.from({ length: DUST_COUNT }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -Math.random() * 0.15 - 0.05,
+      alpha: Math.random() * 0.25 + 0.05,
+      size: Math.random() * 1.2 + 0.6,
+    }));
 
-    const colors = ['#00f0ff', '#8b5cf6', '#38bdf8', '#a855f7'];
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3 - 0.1,
-        radius: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.6 + 0.2,
-        color: colors[Math.floor(Math.random() * colors.length)],
-      });
-    }
-
-    let scanY = 0;
+    let scanlineY = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw faint scanning horizontal line
-      scanY = (scanY + 0.8) % height;
-      const scanGrad = ctx.createLinearGradient(0, scanY - 40, 0, scanY + 40);
-      scanGrad.addColorStop(0, 'rgba(0, 240, 255, 0)');
-      scanGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.04)');
-      scanGrad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+      // Subtle slow scan sweep
+      scanlineY = (scanlineY + 0.35) % height;
+      const scanGrad = ctx.createLinearGradient(0, scanlineY - 30, 0, scanlineY + 30);
+      scanGrad.addColorStop(0, 'rgba(34, 211, 238, 0)');
+      scanGrad.addColorStop(0.5, 'rgba(34, 211, 238, 0.018)');
+      scanGrad.addColorStop(1, 'rgba(34, 211, 238, 0)');
       ctx.fillStyle = scanGrad;
-      ctx.fillRect(0, scanY - 40, width, 80);
+      ctx.fillRect(0, scanlineY - 30, width, 60);
 
-      // Render drifting particles
+      // Render sparse quiet dust
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -73,44 +57,20 @@ export const BackgroundFX: React.FC = () => {
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
+        ctx.fillStyle = '#22D3EE';
         ctx.globalAlpha = p.alpha;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = p.color;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1;
-
-        // Subtle connection lines between close particles
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = '#00f0ff';
-            ctx.globalAlpha = (1 - dist / 110) * 0.08;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-          }
-        }
+        ctx.fillRect(p.x, p.y, p.size, p.size);
       }
+      ctx.globalAlpha = 1;
 
-      animationFrameId = requestAnimationFrame(render);
+      animId = requestAnimationFrame(render);
     };
 
     render();
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
@@ -118,12 +78,12 @@ export const BackgroundFX: React.FC = () => {
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {/* Background canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-      {/* Grid overlay */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-60" />
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-radial-vignette opacity-80" />
-      {/* Scanlines */}
-      <div className="absolute inset-0 scanlines opacity-40" />
+      {/* Fine hairline grid */}
+      <div className="absolute inset-0 bg-hairline-grid opacity-75" />
+      {/* Noir Vignette */}
+      <div className="absolute inset-0 bg-noir-vignette opacity-90" />
+      {/* Subtle Scanlines */}
+      <div className="absolute inset-0 scanlines-subtle opacity-30" />
     </div>
   );
 };
