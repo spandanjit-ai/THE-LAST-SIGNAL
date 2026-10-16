@@ -46,7 +46,8 @@ export type MissionAction =
   | { type: 'RETRY_SEQUENCE' }
   | { type: 'RESET_MISSION'; newMissionId?: string; startedAt?: number }
   | { type: 'SYNC_STATE'; state: MissionState }
-  | { type: 'UPDATE_TEMPORAL_PHASE'; phase: SignalPhase; secondsRemaining: number; progress: number };
+  | { type: 'UPDATE_TEMPORAL_PHASE'; phase: SignalPhase; secondsRemaining: number; progress: number }
+  | { type: 'JUDGE_SOLVE_ALL' };
 
 export interface MissionContextValue {
   state: MissionState;
@@ -62,4 +63,5 @@ export interface MissionContextValue {
   submitFinalVault: (answer: string) => Promise<{ success: boolean; message: string }>;
   retrySequence: () => void;
   resetMission: () => void;
+  triggerJudgeSolve: () => void;
 }

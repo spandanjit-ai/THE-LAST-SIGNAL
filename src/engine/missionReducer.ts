@@ -124,6 +124,31 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
       return createInitialMissionState(action.newMissionId, action.startedAt || now);
     }
 
+    case 'JUDGE_SOLVE_ALL': {
+      return {
+        ...state,
+        revision: state.revision + 1,
+        lastUpdatedAt: now,
+        keyDiscovered: true,
+        anomalyConfirmed: true,
+        cipherDecoded: true,
+        discoveredClues: {
+          transmission: true,
+          key: true,
+          anomaly: true,
+        },
+        completedStages: {
+          transmission: true,
+          key: true,
+          anomaly: true,
+        },
+        currentPhase: 'STABLE',
+        phaseSecondsRemaining: 10,
+        phaseProgress: 100,
+        error: null,
+      };
+    }
+
     case 'UPDATE_TEMPORAL_PHASE': {
       if (
         state.currentPhase === action.phase &&

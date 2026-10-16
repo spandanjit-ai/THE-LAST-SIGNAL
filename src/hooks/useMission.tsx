@@ -15,6 +15,7 @@ import { calculateSignalPhase } from '../engine/temporalLogic';
 import { verifyVaultPrerequisites, verifyAnomalyCode } from '../engine/verification';
 import { isCipherCorrect } from '../engine/cipher';
 import { SoundFX } from '../utils/audio';
+import { initConsoleEasterEgg } from '../utils/consoleBanner';
 
 const MissionContext = createContext<MissionContextValue | null>(null);
 
@@ -118,6 +119,23 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => clearInterval(interval);
   }, []);
 
+  // Initialize DevTools Console Easter Egg & Judge Hotkey
+  useEffect(() => {
+    initConsoleEasterEgg(stateRef.current.missionId);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+Shift+D or Cmd+Shift+D triggers Judge Demo Mode
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+        e.preventDefault();
+        SoundFX.playSuccessPing();
+        dispatch({ type: 'JUDGE_SOLVE_ALL' });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const setRole = useCallback((role: MissionRole | null) => {
     setCurrentRole(role);
     if (typeof window !== 'undefined') {
@@ -210,6 +228,11 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
+  const triggerJudgeSolve = useCallback(() => {
+    SoundFX.playSuccessPing();
+    dispatch({ type: 'JUDGE_SOLVE_ALL' });
+  }, []);
+
   const contextValue: MissionContextValue = {
     state,
     currentRole,
@@ -224,6 +247,7 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     submitFinalVault,
     retrySequence,
     resetMission,
+    triggerJudgeSolve,
   };
 
   return <MissionContext.Provider value={contextValue}>{children}</MissionContext.Provider>;

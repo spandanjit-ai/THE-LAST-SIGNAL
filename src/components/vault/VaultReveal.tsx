@@ -13,8 +13,13 @@ import {
   XCircle,
   X,
   Volume2,
+  Play,
+  Square,
+  Download,
 } from 'lucide-react';
 import { TerminalText } from '../common/TerminalText';
+import { RadioVoice } from '../../utils/radioVoice';
+import { exportMissionDossier } from '../../utils/exportDossier';
 
 interface VaultRevealProps {
   onClose?: () => void;
@@ -35,6 +40,13 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      RadioVoice.stop();
+    };
+  }, []);
 
   // Trigger celebratory confetti on unlock
   useEffect(() => {
@@ -78,7 +90,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
           state.unlockStatus === 'UNLOCKED'
             ? 'border-emerald-500/50 shadow-emerald-500/20'
             : 'border-slate-800 shadow-cyan-500/10'
-        }`}
+        } ${errorMessage ? 'animate-glitch' : ''}`}
       >
         {/* Subtle scanline overlay */}
         <div className="absolute inset-0 scanlines opacity-20 pointer-events-none" />
@@ -341,6 +353,56 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                     speed={18}
                   />
                 </div>
+              </div>
+
+              {/* Interactive Audio Log & Export Actions */}
+              <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded bg-space-950 border border-slate-800">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isPlayingVoice) {
+                        RadioVoice.stop();
+                        setIsPlayingVoice(false);
+                      } else {
+                        setIsPlayingVoice(true);
+                        RadioVoice.speak(
+                          "To all listening exploratory vessels across the quadrant: The anomaly has stabilized. The carrier network has held. The archive is secured for all future transmissions. Transmission sequence complete.",
+                          () => setIsPlayingVoice(false)
+                        );
+                      }
+                    }}
+                    className={`px-3.5 py-2 rounded border text-xs font-mono flex items-center gap-2 transition-all ${
+                      isPlayingVoice
+                        ? 'border-cyan-400 bg-cyan-950/60 text-cyan-300 animate-pulse'
+                        : 'border-slate-700 bg-space-900 text-slate-200 hover:text-cyan-300 hover:border-cyan-500/40'
+                    }`}
+                  >
+                    {isPlayingVoice ? (
+                      <Square className="w-3.5 h-3.5 fill-cyan-400" />
+                    ) : (
+                      <Play className="w-3.5 h-3.5 fill-current" />
+                    )}
+                    <span>{isPlayingVoice ? 'HALT AUDIO PLAYBACK' : 'PLAY TRANSMISSION AUDIO LOG'}</span>
+                  </button>
+
+                  {isPlayingVoice && (
+                    <div className="flex items-center gap-1">
+                      <span className="w-1 h-3 bg-cyan-400 animate-pulse" />
+                      <span className="w-1 h-5 bg-cyan-400 animate-pulse delay-75" />
+                      <span className="w-1 h-2 bg-cyan-400 animate-pulse delay-150" />
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => exportMissionDossier(state)}
+                  className="px-4 py-2 rounded bg-cyan-500 hover:bg-cyan-400 text-space-950 font-display font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shadow-cyan-500/20 active:scale-95"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>EXPORT CLASSIFIED DOSSIER (.TXT)</span>
+                </button>
               </div>
 
               {/* Mission Summary Debrief */}
