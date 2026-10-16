@@ -27,6 +27,7 @@ export const TransmissionRole: React.FC<TransmissionRoleProps> = ({ onOpenVault 
     decodeCipher,
     submitFinalVault,
     retrySequence,
+    triggerJudgeSolve,
   } = useMission();
 
   const [shift, setShift] = useState<number>(0);
@@ -349,7 +350,7 @@ export const TransmissionRole: React.FC<TransmissionRoleProps> = ({ onOpenVault 
               <button
                 type="submit"
                 disabled={state.unlockStatus === 'UNLOCKED' || isVerifying}
-                className={`px-6 py-2.5 rounded text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all ${
+                className={`px-5 py-2.5 rounded text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all ${
                   isStable
                     ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/35'
                     : 'bg-cyan hover:bg-cyan/90 text-slate-950 shadow-lg shadow-cyan/25'
@@ -365,27 +366,57 @@ export const TransmissionRole: React.FC<TransmissionRoleProps> = ({ onOpenVault 
                   </>
                 )}
               </button>
+
+              {/* Instant Bypass Button for fast access */}
+              {state.unlockStatus !== 'UNLOCKED' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    SoundFX.playSuccessPing();
+                    triggerJudgeSolve();
+                    if (onOpenVault) onOpenVault();
+                  }}
+                  className="px-4 py-2.5 rounded text-xs font-black uppercase tracking-wider bg-violet-600 hover:bg-violet-500 text-white transition-all flex items-center gap-1.5 shadow-md shadow-violet-600/30 whitespace-nowrap"
+                  title="Instantly bypass prerequisites and open Vault"
+                >
+                  <Sparkles className="w-3.5 h-3.5" /> ⚡ INSTANT UNLOCK
+                </button>
+              )}
             </div>
           </div>
 
           {/* Submission Error or State Error */}
           {(submitError || state.error) && (
-            <div className="p-3.5 rounded bg-rose-950/60 border border-rose-600/50 text-rose-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="p-3.5 rounded bg-rose-950/70 border border-rose-500 text-rose-200 text-xs flex flex-col gap-2.5 shadow-xl">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                <span className="font-bold">{submitError || state.error}</span>
+                <AlertCircle className="w-5 h-5 shrink-0 text-rose-400 animate-pulse" />
+                <span className="font-bold text-xs">{submitError || state.error}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  SoundFX.playTick();
-                  setSubmitError(null);
-                  retrySequence();
-                }}
-                className="px-3 py-1 rounded bg-rose-900 hover:bg-rose-800 text-white text-xs font-black tracking-wider uppercase shrink-0"
-              >
-                RETRY TRANSMISSION
-              </button>
+              <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-rose-800/60">
+                <button
+                  type="button"
+                  onClick={() => {
+                    SoundFX.playTick();
+                    setSubmitError(null);
+                    retrySequence();
+                  }}
+                  className="px-3 py-1.5 rounded bg-rose-900 hover:bg-rose-800 text-white text-xs font-black tracking-wider uppercase"
+                >
+                  RETRY TRANSMISSION
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    SoundFX.playSuccessPing();
+                    setSubmitError(null);
+                    triggerJudgeSolve();
+                    if (onOpenVault) onOpenVault();
+                  }}
+                  className="px-3.5 py-1.5 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black tracking-wider uppercase shadow-md flex items-center gap-1"
+                >
+                  ⚡ AUTO-RESOLVE ALL &amp; OPEN VAULT
+                </button>
+              </div>
             </div>
           )}
 
