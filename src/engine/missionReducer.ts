@@ -209,8 +209,11 @@ export function missionReducer(state: MissionState, action: MissionAction): Miss
         currentPhase: 'STABLE',
         phaseSecondsRemaining: 10,
         phaseProgress: 100,
+        unlockStatus: 'UNLOCKED',
+        unlockedAt: now,
         error: null,
       };
+
     }
 
     case 'UPDATE_TEMPORAL_PHASE': {

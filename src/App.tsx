@@ -17,16 +17,21 @@ const MissionApp: React.FC = () => {
   const { currentRole, setRole, triggerJudgeSolve } = useMission();
   const [showVaultModal, setShowVaultModal] = useState<boolean>(false);
 
-  // Esc key listener to close modal
+  // Global hotkeys (Esc to close, Ctrl/Cmd + Shift + D to open Judge Demo Vault)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setShowVaultModal(false);
       }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+        e.preventDefault();
+        triggerJudgeSolve();
+        setShowVaultModal(true);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [triggerJudgeSolve]);
 
   // If no role parameter is set in URL, display the Landing Screen
   if (!currentRole) {
@@ -37,13 +42,19 @@ const MissionApp: React.FC = () => {
           onStartMission={(role: MissionRole = 'transmission') => {
             setRole(role);
           }}
+          onDemoSolve={() => {
+            triggerJudgeSolve();
+            setShowVaultModal(true);
+          }}
         />
+
         {showVaultModal && (
           <VaultReveal onClose={() => setShowVaultModal(false)} />
         )}
       </main>
     );
   }
+
 
   // Active Mission View
   return (

@@ -8,14 +8,20 @@ import {
   Volume2,
   VolumeX,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
-
 
 interface LandingScreenProps {
   onStartMission: (role?: MissionRole) => void;
+  onDemoSolve?: () => void;
 }
 
-export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) => {
+export const LandingScreen: React.FC<LandingScreenProps> = ({
+  onStartMission,
+  onDemoSolve,
+}) => {
+
+
   const {
     state,
     connectedTabs,
@@ -147,6 +153,17 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) 
               <ExternalLink className="w-3.5 h-3.5 text-signal-cyan" />
               <span>LAUNCH 3 WINDOWS</span>
             </button>
+
+            {onDemoSolve && (
+              <button
+                onClick={onDemoSolve}
+                className="px-4 py-4 rounded border border-signal-cyan/40 bg-signal-cyan/10 hover:bg-signal-cyan/20 text-signal-cyan font-display font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(34,211,238,0.15)] active:scale-95"
+                title="Instant demo unlock with Supernova burst (Shortcut: Ctrl+Shift+D)"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-signal-cyan animate-pulse" />
+                <span>DEMO VAULT</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -155,13 +172,22 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) 
       <footer className="border-t border-noir-border pt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-signal-dim">
         <div>TRACK OMEGA // MYSTERY BOX // CINEMATIC SIGNAL NOIR</div>
         <div className="flex items-center gap-4">
+          {onDemoSolve && (
+            <button
+              onClick={onDemoSolve}
+              className="text-signal-dim hover:text-signal-cyan transition-colors flex items-center gap-1 font-mono"
+            >
+              <span>⚡</span>
+              <span>JUDGE DEMO (Ctrl+Shift+D)</span>
+            </button>
+          )}
+          <span className="text-noir-border">//</span>
           <span>BROADCASTCHANNEL SYNC</span>
           <span className="text-noir-border">//</span>
           <span>SHA-256 ENCRYPTION</span>
-          <span className="text-noir-border">//</span>
-          <span className="text-signal-muted">ALL TELEMETRY LOCAL</span>
         </div>
       </footer>
     </div>
   );
 };
+
