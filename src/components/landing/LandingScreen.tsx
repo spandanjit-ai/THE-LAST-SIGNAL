@@ -105,21 +105,24 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
       {/* Main Narrative & Hero Signal Composition */}
       <div className="my-auto py-12 lg:py-16 space-y-8">
         <div className="space-y-4 max-w-2xl">
-          <div className="text-xs font-mono tracking-widest text-signal-cyan uppercase">
-            // INTERCEPT CAPTURED
+          <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-signal-cyan uppercase">
+            <span className="w-2 h-2 rounded-full bg-signal-cyan animate-pulse shadow-[0_0_8px_#22d3ee]" />
+            <span>// INTERCEPT CAPTURED</span>
+            <span className="text-noir-border">//</span>
+            <span className="text-signal-amber font-semibold">CARRIER: 1420.405 MHz</span>
           </div>
 
-          <h1 className="font-display font-extrabold text-5xl sm:text-7xl lg:text-8xl tracking-tight text-signal-text leading-none">
+          <h1 className="font-display font-extrabold text-5xl sm:text-7xl lg:text-8xl tracking-tight leading-none bg-gradient-to-r from-signal-cyan via-white to-signal-violet bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(34,211,238,0.22)] select-none">
             THE LAST SIGNAL
           </h1>
 
-          <p className="font-display text-xl sm:text-2xl text-signal-muted font-normal leading-relaxed">
-            A transmission was received. Its origin is unknown.
+          <p className="font-display text-xl sm:text-2xl text-slate-200 font-normal leading-relaxed">
+            A transmission was received. <span className="text-signal-cyan font-semibold drop-shadow-[0_0_10px_rgba(34,211,238,0.35)]">Its origin is unknown.</span>
           </p>
 
-          <p className="font-mono text-xs sm:text-sm text-signal-dim leading-relaxed max-w-xl">
-            Its contents are incomplete, encrypted, and decentralized across three browser tabs.
-            Investigate the carrier frequency, recover the cipher shift, inspect hidden DOM metadata,
+          <p className="font-mono text-xs sm:text-sm text-slate-400 leading-relaxed max-w-xl">
+            Its contents are incomplete, <span className="text-signal-violet font-semibold">encrypted</span>, and decentralized across <span className="text-signal-cyan font-semibold">three browser tabs</span>.
+            Investigate the carrier frequency, recover the <span className="text-signal-violet font-semibold">cipher shift</span>, inspect hidden <span className="text-signal-amber font-semibold">DOM metadata</span>,
             and satisfy the temporal alignment window to unlock the digital vault.
           </p>
         </div>
@@ -132,9 +135,10 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({
         {/* Case Metadata & Primary Prominent Action */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-4 border-t border-noir-border">
           <div className="font-mono text-xs text-signal-dim space-y-1">
-            <div>CARRIER FREQUENCY : <span className="text-signal-text">1420.405 MHz</span></div>
-            <div>TRANSMISSION ROLE : <span className="text-signal-cyan">3 TABS SYNCHRONIZED</span></div>
+            <div>CARRIER FREQUENCY : <span className="text-signal-cyan font-bold tracking-wider">1420.405 MHz</span></div>
+            <div>TRANSMISSION ROLE : <span className="text-signal-violet font-bold tracking-wider">3 TABS SYNCHRONIZED</span></div>
           </div>
+
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button

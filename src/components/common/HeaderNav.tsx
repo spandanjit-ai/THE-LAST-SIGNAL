@@ -28,24 +28,33 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  const roles: Array<{ id: MissionRole; label: string; number: string; completed: boolean }> = [
+  const roles: Array<{
+    id: MissionRole;
+    label: string;
+    number: string;
+    completed: boolean;
+    color: 'cyan' | 'violet' | 'amber';
+  }> = [
     {
       id: 'transmission',
       label: 'TRANSMISSION',
       number: '01',
       completed: state.completedStages.transmission || state.cipherDecoded,
+      color: 'cyan',
     },
     {
       id: 'key',
       label: 'DECRYPTION KEY',
       number: '02',
       completed: state.completedStages.key || state.keyDiscovered,
+      color: 'violet',
     },
     {
       id: 'anomaly',
-      label: 'ANOMALY',
+      label: 'DOM ANOMALY',
       number: '03',
       completed: state.completedStages.anomaly || state.anomalyConfirmed,
+      color: 'amber',
     },
   ];
 
@@ -59,18 +68,18 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
             className="flex items-center gap-2.5 text-left group focus:outline-none"
             title="Return to Overview"
           >
-            <div className="w-6 h-6 rounded border border-signal-cyan/40 bg-noir-surface flex items-center justify-center text-signal-cyan">
+            <div className="w-6 h-6 rounded border border-signal-cyan/40 bg-noir-surface flex items-center justify-center text-signal-cyan shadow-[0_0_10px_rgba(34,211,238,0.2)]">
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M12 2v3m0 14v3M2 12h3m14 0h3" />
               </svg>
             </div>
             <div>
-              <div className="font-display font-bold tracking-tight text-sm sm:text-base text-signal-text group-hover:text-signal-cyan transition-colors">
+              <div className="font-display font-bold tracking-tight text-sm sm:text-base text-slate-100 group-hover:text-signal-cyan transition-colors">
                 THE LAST SIGNAL
               </div>
               <div className="text-[10px] font-mono text-signal-dim">
-                RELAY: {state.missionId} // REV {state.revision}
+                RELAY: <span className="text-signal-cyan font-bold">{state.missionId}</span> // REV {state.revision}
               </div>
             </div>
           </button>
@@ -80,25 +89,42 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ onOpenVaultModal }) => {
         <nav className="flex items-center gap-1 sm:gap-2 font-mono text-xs">
           {roles.map((r) => {
             const isActive = currentRole === r.id;
+            const activeColorClass =
+              r.color === 'cyan'
+                ? 'border-signal-cyan/50 bg-signal-cyan/15 text-signal-cyan shadow-[0_0_12px_rgba(34,211,238,0.15)] font-bold'
+                : r.color === 'violet'
+                ? 'border-signal-violet/50 bg-signal-violet/15 text-signal-violet shadow-[0_0_12px_rgba(139,124,255,0.15)] font-bold'
+                : 'border-signal-amber/50 bg-signal-amber/15 text-signal-amber shadow-[0_0_12px_rgba(255,180,84,0.15)] font-bold';
+
+            const dotColor =
+              r.color === 'cyan'
+                ? 'bg-signal-cyan'
+                : r.color === 'violet'
+                ? 'bg-signal-violet'
+                : 'bg-signal-amber';
+
             return (
               <button
                 key={r.id}
                 onClick={() => setRole(r.id)}
                 className={`px-3 py-1.5 rounded transition-all flex items-center gap-2 border ${
                   isActive
-                    ? 'border-signal-cyan/50 bg-noir-surface text-signal-cyan font-bold'
-                    : 'border-transparent text-signal-muted hover:text-signal-text hover:bg-noir-surface/60'
+                    ? activeColorClass
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-noir-surface/60'
                 }`}
               >
-                <span className="text-[10px] text-signal-dim">{r.number}</span>
+                <span className={`text-[10px] ${isActive ? 'font-bold' : 'text-signal-dim'}`}>{r.number}</span>
                 <span>{r.label}</span>
-                {r.completed && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-signal-cyan" />
+                {r.completed ? (
+                  <span className={`w-1.5 h-1.5 rounded-full ${dotColor} shadow-[0_0_6px_currentColor]`} />
+                ) : (
+                  <span className="w-1 h-1 rounded-full bg-slate-700" />
                 )}
               </button>
             );
           })}
         </nav>
+
 
         {/* Right utility cluster */}
         <div className="flex items-center gap-2.5 font-mono text-xs">
