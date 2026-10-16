@@ -32,7 +32,7 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
       const centerY = height / 2;
 
       // Subtle horizontal hairline reference grid
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, centerY);
@@ -40,13 +40,15 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
       ctx.stroke();
 
       // Slow breathing waveform amplitude modulation
-      const breath = 1 + Math.sin(t * 0.8) * 0.12;
+      const breath = 1 + Math.sin(t * 0.8) * 0.15;
 
-      ctx.lineWidth = isUnlocked || phase === 'STABLE' ? 2 : 1.2;
+      ctx.lineWidth = isUnlocked || phase === 'STABLE' ? 2.5 : 1.5;
 
       if (isUnlocked) {
-        // Stabilized, synchronized harmonic carrier wave
-        ctx.strokeStyle = '#22D3EE';
+        // Stabilized, synchronized harmonic carrier wave with emerald/cyan glow
+        ctx.strokeStyle = '#10b981';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         for (let x = 0; x < width; x++) {
           const y = centerY + Math.sin(x * 0.02 + t * 2) * (height * 0.28 * breath);
@@ -55,8 +57,10 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
         }
         ctx.stroke();
       } else if (phase === 'SEARCHING') {
-        // SEARCHING: Erratic radio interference & searching spikes
-        ctx.strokeStyle = '#FFB454';
+        // SEARCHING: Erratic radio interference & searching spikes in amber
+        ctx.strokeStyle = '#f59e0b';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
         for (let x = 0; x < width; x++) {
           const noise = (Math.random() - 0.5) * (height * 0.32);
@@ -69,14 +73,16 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
 
         // Slow scanning sweep line
         const sweepX = (t * 120) % width;
-        ctx.strokeStyle = 'rgba(255, 180, 84, 0.35)';
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
         ctx.beginPath();
         ctx.moveTo(sweepX, 0);
         ctx.lineTo(sweepX, height);
         ctx.stroke();
       } else if (phase === 'ALIGNING') {
-        // ALIGNING: Dual harmonics converging into lock
-        ctx.strokeStyle = '#8B7CFF';
+        // ALIGNING: Dual harmonics converging into lock in violet
+        ctx.strokeStyle = '#8b5cf6';
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         for (let x = 0; x < width; x++) {
           const wave1 = Math.sin(x * 0.016 + t * 1.8) * (height * 0.22);
@@ -87,8 +93,10 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
         }
         ctx.stroke();
       } else {
-        // STABLE: Pure, coherent resonant sinusoidal wave
-        ctx.strokeStyle = '#22D3EE';
+        // STABLE: Pure, coherent resonant sinusoidal wave in electric cyan
+        ctx.strokeStyle = '#00f0ff';
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = 12;
         ctx.beginPath();
         for (let x = 0; x < width; x++) {
           const y = centerY + Math.sin(x * 0.022 + t * 2.4) * (height * 0.3 * breath);
@@ -98,6 +106,7 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
         ctx.stroke();
       }
 
+      ctx.shadowBlur = 0;
       t += 0.024;
       animId = requestAnimationFrame(render);
     };
@@ -108,51 +117,51 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
 
   const phaseConfig = {
     SEARCHING: {
-      badge: 'bg-[#FFB454]/10 text-signal-amber border-[#FFB454]/30',
-      bar: 'bg-signal-amber',
-      icon: <Radio className="w-3.5 h-3.5 text-signal-amber" />,
+      badge: 'bg-amber/15 text-amber border-amber/40 text-glow-amber',
+      bar: 'bg-amber',
+      icon: <Radio className="w-3.5 h-3.5 text-amber animate-pulse" />,
       desc: 'Searching carrier harmonics. Submissions locked.',
     },
     ALIGNING: {
-      badge: 'bg-[#8B7CFF]/10 text-signal-violet border-[#8B7CFF]/30',
-      bar: 'bg-signal-violet',
-      icon: <Zap className="w-3.5 h-3.5 text-signal-violet" />,
+      badge: 'bg-violet/15 text-violet border-violet/40 text-glow-violet',
+      bar: 'bg-violet',
+      icon: <Zap className="w-3.5 h-3.5 text-violet animate-pulse" />,
       desc: 'Phase lock acquiring. Converging frequency...',
     },
     STABLE: {
-      badge: 'bg-[#22D3EE]/15 text-signal-cyan border-[#22D3EE]/40',
-      bar: 'bg-signal-cyan',
-      icon: <Lock className="w-3.5 h-3.5 text-signal-cyan" />,
+      badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 text-glow-emerald',
+      bar: 'bg-emerald-400',
+      icon: <Lock className="w-3.5 h-3.5 text-emerald-400" />,
       desc: 'RESONANCE STABILIZED // SUBMISSIONS AUTHORIZED',
     },
   }[phase];
 
   return (
-    <div className="border border-noir-border bg-noir-surface/90 rounded overflow-hidden backdrop-blur-md">
+    <div className="border border-slate-800 bg-space-900/90 rounded-xl overflow-hidden backdrop-blur-md shadow-lg font-mono">
       {/* Telemetry Header */}
-      <div className="px-4 py-2.5 border-b border-noir-border flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2">
-          <span className="text-signal-dim text-[10px] uppercase tracking-wider">
+      <div className="px-4 py-2.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider">
             CARRIER TELEMETRY:
           </span>
           <span
-            className={`px-2 py-0.5 rounded border text-[11px] font-semibold tracking-wider uppercase flex items-center gap-1.5 ${phaseConfig.badge}`}
+            className={`px-2.5 py-0.5 rounded border text-xs font-black tracking-wider uppercase flex items-center gap-1.5 ${phaseConfig.badge}`}
           >
             {phaseConfig.icon}
             <span>{isUnlocked ? 'HARMONIC STABLE' : phase}</span>
           </span>
-          <span className="text-signal-muted hidden sm:inline text-[11px]">
+          <span className="text-slate-200 hidden sm:inline text-xs font-medium">
             {isUnlocked ? 'DECRYPTED ARCHIVE COMMITTED' : phaseConfig.desc}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-signal-dim text-[11px]">PHASE WINDOW:</span>
+          <span className="text-slate-300 text-xs font-bold">PHASE WINDOW:</span>
           <span
-            className={`font-mono text-xs px-2 py-0.5 rounded border ${
+            className={`font-mono text-xs px-2.5 py-0.5 rounded border font-black ${
               phase === 'STABLE'
-                ? 'text-signal-cyan bg-noir-base border-signal-cyan/40 font-bold'
-                : 'text-signal-text bg-noir-base border-noir-border'
+                ? 'text-emerald-300 bg-space-950 border-emerald-500/50 text-glow-emerald'
+                : 'text-cyan-300 bg-space-950 border-cyan/40 text-glow-cyan'
             }`}
           >
             {secondsRemaining}s
@@ -161,15 +170,15 @@ export const SignalHero: React.FC<SignalHeroProps> = ({ compact = false }) => {
       </div>
 
       {/* Hero Waveform Canvas */}
-      <div className="relative">
+      <div className="relative bg-space-950/80">
         <canvas ref={canvasRef} className="w-full block" />
-        <div className="absolute bottom-1.5 right-3 text-[10px] font-mono text-signal-dim">
+        <div className="absolute bottom-1.5 right-3 text-[11px] font-mono text-cyan-400 font-bold tracking-wider">
           1420.405 MHz // HYDROGEN LINE OSCILLOSCOPE
         </div>
       </div>
 
       {/* Progress timeline strip */}
-      <div className="h-0.5 w-full bg-noir-base overflow-hidden">
+      <div className="h-1 w-full bg-space-950 overflow-hidden">
         <div
           className={`h-full transition-all duration-300 ease-linear ${phaseConfig.bar}`}
           style={{ width: `${state.phaseProgress}%` }}

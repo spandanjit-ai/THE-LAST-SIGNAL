@@ -95,22 +95,24 @@ const MissionApp: React.FC = () => {
       )}
 
       {/* Tactical Footer with Judge Demo Trigger */}
-      <footer className="relative z-10 border-t border-slate-800/80 bg-space-950/80 px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-500">
-        <div>THE LAST SIGNAL // CLASSIFIED TRANSMISSION SYSTEM // BROADCAST CHANNEL ACTIVE</div>
+      <footer className="relative z-10 border-t border-slate-800/80 bg-space-950/90 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div className="text-slate-300 font-bold">
+          THE LAST SIGNAL <span className="text-cyan">// CLASSIFIED TRANSMISSION RELAY</span> <span className="text-slate-600">//</span> BROADCAST ACTIVE
+        </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
               triggerJudgeSolve();
               setShowVaultModal(true);
             }}
-            className="text-[11px] text-slate-400 hover:text-cyan border border-slate-800 hover:border-cyan/40 bg-space-900 px-2.5 py-1 rounded transition-colors flex items-center gap-1.5"
+            className="text-xs text-cyan hover:text-white border border-cyan/50 hover:border-cyan bg-cyan/10 hover:bg-cyan/20 px-3 py-1.5 rounded-lg transition-all flex items-center gap-2 font-black text-glow-cyan shadow-sm shadow-cyan/20"
             title="Fast solve for hackathon judges: Populates all clues & STABLE phase (Shortcut: Ctrl+Shift+D)"
           >
             <span>⚡</span>
             <span>JUDGE DEMO MODE</span>
           </button>
           <span className="hidden sm:inline text-slate-600">//</span>
-          <span className="text-[11px] text-slate-600 hidden sm:inline">ESC TO CLOSE</span>
+          <span className="text-xs text-slate-400 hidden sm:inline font-bold">ESC TO CLOSE</span>
         </div>
       </footer>
     </div>
