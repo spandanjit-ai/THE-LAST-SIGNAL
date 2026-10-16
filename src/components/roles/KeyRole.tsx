@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
+import { XRayLens } from '../challenges/XRayLens';
 
 export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ onNavigateToRole }) => {
   const { state, discoverKey } = useMission();
@@ -237,6 +238,24 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
             </div>
           </div>
         )}
+      </div>
+
+      {/* 3. Challenge C2: Spectral X-Ray Fluoroscopy Lens */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between border-b border-violet/30 pb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-violet-400 font-mono text-xs font-bold uppercase tracking-wider">
+              PHASE 02 // SPECTRAL RECEPTOR
+            </span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-950 border border-violet-500/50 text-violet-300">
+              CHALLENGE C2
+            </span>
+          </div>
+          <span className="text-[11px] font-mono text-slate-300">
+            Transmit discovered sequence to Transmission console
+          </span>
+        </div>
+        <XRayLens />
       </div>
     </div>
   );

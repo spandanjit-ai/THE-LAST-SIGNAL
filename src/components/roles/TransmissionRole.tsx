@@ -15,6 +15,7 @@ import {
   Check,
 } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
+import { NodeWireCipherLock } from '../challenges/NodeWireCipherLock';
 
 interface TransmissionRoleProps {
   onOpenVault?: () => void;
@@ -292,6 +293,11 @@ export const TransmissionRole: React.FC<TransmissionRoleProps> = ({ onOpenVault 
             )}
           </button>
         </div>
+      </div>
+
+      {/* 3.5 Challenge C2: Node-Wire Cipher Lock */}
+      <div className="space-y-3">
+        <NodeWireCipherLock />
       </div>
 
       {/* 4. Vault Access Terminal Station */}

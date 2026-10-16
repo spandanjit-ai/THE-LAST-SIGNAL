@@ -10,6 +10,7 @@ import {
 import { ANOMALY_CODE } from '../../engine/verification';
 import { SupernovaCanvas } from '../effects/SupernovaCanvas';
 import { SoundFX } from '../../utils/audio';
+import { TemporalScrubber } from '../challenges/TemporalScrubber';
 import {
   Search,
   Code,
@@ -262,6 +263,11 @@ export const AnomalyRole: React.FC = () => {
             </form>
           )}
         </div>
+      </div>
+
+      {/* 3. Challenge C3: Temporal State Scrubber & Historical Logs */}
+      <div className="space-y-3">
+        <TemporalScrubber />
       </div>
     </div>
   );

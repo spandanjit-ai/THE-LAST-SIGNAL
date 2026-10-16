@@ -1,12 +1,13 @@
 import { MissionState, ChallengeState } from './missionTypes';
+import { createInitialTimelineEvent } from './timelineHistory';
 
 export const STORAGE_KEY = 'THE_LAST_SIGNAL_MISSION_STATE_v1';
 export const CURRENT_SCHEMA_VERSION = 1;
 
 export function createDefaultChallenges(): ChallengeState {
   return {
-    phaseTitle: 'PHASE 01 OVERRIDE',
-    revealedCount: 1,
+    phaseTitle: 'TRACK OMEGA // TRIPLE THREAT',
+    revealedCount: 3,
     totalCount: 3,
     track: 'TRACK OMEGA // MYSTERY BOX',
     items: {
@@ -26,22 +27,22 @@ export function createDefaultChallenges(): ChallengeState {
       C2: {
         id: 'C2',
         title: 'Make It Come Alive',
-        subtitle: 'AWAITING HACKATHON BROADCAST',
+        subtitle: 'CROSS-TAB X-RAY & NODE-WIRE CIPHER',
         track: 'TRACK OMEGA // MYSTERY BOX',
-        status: 'LOCKED',
-        revealed: false,
+        status: 'ACTIVE',
+        revealed: true,
         description:
-          'Challenge specifications currently encrypted by hackathon organizers. Stand by for Phase 02 activation.',
+          'Multi-tab BroadcastChannel cipher lock. Use the spectral X-Ray lens on Key Node to reveal the hidden 5-stage frequency sequence, then connect nodes on Transmission.',
       },
       C3: {
         id: 'C3',
         title: 'Chaos Card',
-        subtitle: 'AWAITING HACKATHON BROADCAST',
+        subtitle: '90S ENTROPY GLITCH & TEMPORAL SCRUBBER',
         track: 'TRACK OMEGA // MYSTERY BOX',
-        status: 'LOCKED',
-        revealed: false,
+        status: 'ACTIVE',
+        revealed: true,
         description:
-          'Wildcard challenge tier currently locked. Awaiting system trigger signal.',
+          'Temporal State Scrubber and 90-Second Entropy Cascade. As signal instability increases, scrub historical mission events to retrieve the pre-entropy dampener checksum (0x7749-CLEAR) and stabilize the carrier.',
       },
     },
   };
@@ -49,11 +50,12 @@ export function createDefaultChallenges(): ChallengeState {
 
 export function createInitialMissionState(missionId?: string, startedAt?: number): MissionState {
   const now = Date.now();
+  const missionStartedAt = startedAt || now;
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     missionId: missionId || `SIG-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
     revision: 1,
-    startedAt: startedAt || now,
+    startedAt: missionStartedAt,
     discoveredClues: {
       transmission: false,
       key: false,
@@ -71,6 +73,19 @@ export function createInitialMissionState(missionId?: string, startedAt?: number
     keyDiscovered: false,
     anomalyConfirmed: false,
     challenges: createDefaultChallenges(),
+    nodeWireState: {
+      connectedNodes: [],
+      isLocked: false,
+      isSolved: false,
+      error: null,
+    },
+    timelineEvents: [createInitialTimelineEvent(missionStartedAt)],
+    entropyState: {
+      timerStartedAt: missionStartedAt,
+      durationSeconds: 90,
+      isStabilized: false,
+      isExpired: false,
+    },
     unlockStatus: 'LOCKED',
     lastUpdatedAt: now,
     error: null,
@@ -87,8 +102,27 @@ export function loadSavedMissionState(): MissionState | null {
     const parsed = JSON.parse(raw);
     if (parsed && parsed.schemaVersion === CURRENT_SCHEMA_VERSION && parsed.missionId) {
       // Ensure backwards-compatibility for challenge state
-      if (!parsed.challenges || !parsed.challenges.items || !parsed.challenges.items.C1) {
+      if (!parsed.challenges || !parsed.challenges.items || !parsed.challenges.items.C1 || !parsed.challenges.items.C2 || !parsed.challenges.items.C3) {
         parsed.challenges = createDefaultChallenges();
+      }
+      if (!parsed.nodeWireState) {
+        parsed.nodeWireState = {
+          connectedNodes: [],
+          isLocked: false,
+          isSolved: false,
+          error: null,
+        };
+      }
+      if (!parsed.timelineEvents || !Array.isArray(parsed.timelineEvents) || parsed.timelineEvents.length === 0) {
+        parsed.timelineEvents = [createInitialTimelineEvent(parsed.startedAt || Date.now())];
+      }
+      if (!parsed.entropyState) {
+        parsed.entropyState = {
+          timerStartedAt: parsed.startedAt || Date.now(),
+          durationSeconds: 90,
+          isStabilized: false,
+          isExpired: false,
+        };
       }
       return parsed as MissionState;
     }

@@ -10,6 +10,7 @@ import { TransmissionRole } from './components/roles/TransmissionRole';
 import { KeyRole } from './components/roles/KeyRole';
 import { AnomalyRole } from './components/roles/AnomalyRole';
 import { VaultReveal } from './components/vault/VaultReveal';
+import { EntropyGlitchOverlay } from './components/challenges/EntropyGlitchOverlay';
 import { MissionRole } from './engine/missionTypes';
 
 const MissionApp: React.FC = () => {
@@ -58,6 +59,9 @@ const MissionApp: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col text-slate-100 bg-space-950">
       <BackgroundFX />
+
+      {/* Challenge C3: Real 90-Second Entropy Cascade HUD & Glitch Shader */}
+      <EntropyGlitchOverlay />
 
       {/* Top Tactical Navigation */}
       <HeaderNav onOpenVaultModal={() => setShowVaultModal(true)} />

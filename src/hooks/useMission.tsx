@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer, useRef, useSta
 import {
   MissionRole,
   MissionContextValue,
+  TimelineEvent,
 } from '../engine/missionTypes';
 import { missionReducer } from '../engine/missionReducer';
 import {
@@ -14,6 +15,8 @@ import { createSyncManager, SyncManager } from '../engine/sync';
 import { calculateSignalPhase } from '../engine/temporalLogic';
 import { verifyVaultPrerequisites, verifyAnomalyCode } from '../engine/verification';
 import { isCipherCorrect } from '../engine/cipher';
+import { validateNodeSequence } from '../engine/cipherLockLogic';
+import { verifyEntropyChecksum } from '../engine/timelineHistory';
 import { SoundFX } from '../utils/audio';
 import { initConsoleEasterEgg } from '../utils/consoleBanner';
 
@@ -36,6 +39,7 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [currentRole, setCurrentRole] = useState<MissionRole | null>(() => getRoleFromLocation());
   const [connectedTabs, setConnectedTabs] = useState<number>(1);
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(false);
+  const [previewEvent, setPreviewEvent] = useState<TimelineEvent | null>(null);
 
   const [state, dispatch] = useReducer(missionReducer, null, () => {
     const saved = loadSavedMissionState();
@@ -248,6 +252,62 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
+  const connectNodeWire = useCallback((nodeId: string) => {
+    const currentState = stateRef.current;
+    if (currentState.nodeWireState?.isSolved) {
+      return { success: true, isCompleted: true, message: 'CIRCUIT_ALREADY_RESONANT' };
+    }
+    const currentNodes = currentState.nodeWireState?.connectedNodes || [];
+    if (currentNodes.includes(nodeId)) {
+      return { success: false, isCompleted: false, message: 'NODE_ALREADY_CONNECTED' };
+    }
+    const testSequence = [...currentNodes, nodeId];
+    const validation = validateNodeSequence(testSequence);
+
+    if (validation.isValidPrefix) {
+      SoundFX.playSuccessPing();
+      dispatch({ type: 'CONNECT_NODE_WIRE', nodeId });
+      return {
+        success: true,
+        isCompleted: validation.isComplete,
+        message: validation.isComplete ? 'CIRCUIT_RESONANCE_COMPLETE' : 'NODE_CONNECTED',
+      };
+    } else {
+      SoundFX.playWarning();
+      dispatch({ type: 'CONNECT_NODE_WIRE', nodeId });
+      return {
+        success: false,
+        isCompleted: false,
+        message: validation.error || 'CIRCUIT_SHORT_DETECTED',
+      };
+    }
+  }, []);
+
+  const resetNodeWires = useCallback(() => {
+    SoundFX.playTick();
+    dispatch({ type: 'RESET_NODE_WIRES' });
+  }, []);
+
+  const recalibrateEntropy = useCallback(() => {
+    SoundFX.playTick();
+    dispatch({ type: 'RESET_ENTROPY_TIMER', timestamp: Date.now() });
+  }, []);
+
+  const stabilizeEntropyWithChecksum = useCallback((checksum: string) => {
+    const isValid = verifyEntropyChecksum(checksum);
+    if (isValid) {
+      SoundFX.playSuccessPing();
+      dispatch({ type: 'STABILIZE_ENTROPY', checksum, timestamp: Date.now() });
+      return { success: true, message: 'DAMPENERS_ENGAGED: Harmonic stability achieved.' };
+    } else {
+      SoundFX.playWarning();
+      return {
+        success: false,
+        message: 'CHECKSUM_REJECTED: Mismatch. Scrub timeline to T+0s to recover the pre-entropy dampener code.',
+      };
+    }
+  }, []);
+
   const triggerJudgeSolve = useCallback(() => {
     SoundFX.playSuccessPing();
     dispatch({ type: 'JUDGE_SOLVE_ALL' });
@@ -258,12 +318,18 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     currentRole,
     connectedTabs,
     isAudioEnabled,
+    previewEvent,
+    setPreviewEvent,
     toggleAudio,
     setRole,
     startMission,
     discoverKey,
     confirmAnomaly,
     completeChallenge,
+    connectNodeWire,
+    resetNodeWires,
+    recalibrateEntropy,
+    stabilizeEntropyWithChecksum,
     decodeCipher,
     submitFinalVault,
     retrySequence,

@@ -3,21 +3,21 @@ import { missionReducer } from '../engine/missionReducer';
 import { createInitialMissionState } from '../engine/storage';
 
 describe('Challenge System - Phase 01 Override (Track Omega)', () => {
-  it('initializes Challenge 1 as ACTIVE and Challenges 2 & 3 as LOCKED placeholders', () => {
+  it('initializes Challenge 1, 2, and 3 as ACTIVE and revealed per Track Omega specification', () => {
     const state = createInitialMissionState();
-    expect(state.challenges.phaseTitle).toBe('PHASE 01 OVERRIDE');
+    expect(state.challenges.phaseTitle).toBe('TRACK OMEGA // TRIPLE THREAT');
     expect(state.challenges.track).toBe('TRACK OMEGA // MYSTERY BOX');
-    expect(state.challenges.revealedCount).toBe(1);
+    expect(state.challenges.revealedCount).toBe(3);
     expect(state.challenges.totalCount).toBe(3);
 
     expect(state.challenges.items.C1.status).toBe('ACTIVE');
     expect(state.challenges.items.C1.revealed).toBe(true);
 
-    expect(state.challenges.items.C2.status).toBe('LOCKED');
-    expect(state.challenges.items.C2.revealed).toBe(false);
+    expect(state.challenges.items.C2.status).toBe('ACTIVE');
+    expect(state.challenges.items.C2.revealed).toBe(true);
 
-    expect(state.challenges.items.C3.status).toBe('LOCKED');
-    expect(state.challenges.items.C3.revealed).toBe(false);
+    expect(state.challenges.items.C3.status).toBe('ACTIVE');
+    expect(state.challenges.items.C3.revealed).toBe(true);
   });
 
   it('rejects invalid or malformed DOM mutations on Challenge 1', () => {
