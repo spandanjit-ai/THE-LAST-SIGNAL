@@ -1,6 +1,6 @@
 export const CIPHERTEXT = 'VJG NCUV UKIPCN';
 export const EXPECTED_PLAINTEXT = 'THE LAST SIGNAL';
-export const SHIFT_VALUE = 3;
+export const SHIFT_VALUE = 2;
 
 /**
  * Shifts alphabetic characters by the specified amount (wrapping A-Z).

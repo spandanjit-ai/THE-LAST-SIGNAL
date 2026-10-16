@@ -148,9 +148,9 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
                 CAESAR CIPHER / ROT-3
               </div>
               <div className="text-xs font-mono text-signal-muted leading-relaxed">
-                Backward displacement: <span className="text-signal-violet font-bold">-3 (THREE POSITIONS)</span>
+                Backward displacement: <span className="text-signal-violet font-bold">-2 (or 3-step classic)</span>
                 <br />
-                Forward modular offset: <span className="text-signal-dim">+23</span>
+                Forward modular offset: <span className="text-signal-dim">+24</span>
               </div>
             </div>
 
@@ -161,15 +161,15 @@ export const KeyRole: React.FC<{ onNavigateToRole?: (role: any) => void }> = ({ 
               <div className="text-xs font-mono space-y-1.5 pt-1">
                 <div className="flex justify-between border-b border-noir-border pb-1">
                   <span className="text-signal-dim">&apos;V&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;T&apos; (-3)</span>
+                  <span className="text-signal-violet font-bold">→ &apos;T&apos; (-2)</span>
                 </div>
                 <div className="flex justify-between border-b border-noir-border pb-1">
                   <span className="text-signal-dim">&apos;J&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;G&apos; (-3)</span>
+                  <span className="text-signal-violet font-bold">→ &apos;H&apos; (-2)</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-signal-dim">&apos;G&apos; in ciphertext</span>
-                  <span className="text-signal-violet font-bold">→ &apos;D&apos; (-3)</span>
+                  <span className="text-signal-violet font-bold">→ &apos;E&apos; (-2)</span>
                 </div>
               </div>
             </div>

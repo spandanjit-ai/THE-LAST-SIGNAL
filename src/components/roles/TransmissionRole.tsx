@@ -130,7 +130,7 @@ export const TransmissionRole: React.FC<{ onOpenVault?: () => void }> = () => {
           {/* Quick tuning shortcuts */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
             <span className="text-signal-dim text-[11px] uppercase mr-1">PRESETS:</span>
-            {[-3, -1, 0, 1, 3, 5].map((val) => (
+            {[-3, -2, -1, 0, 1, 2, 3].map((val) => (
               <button
                 key={val}
                 onClick={() => handleShiftChange(val)}
