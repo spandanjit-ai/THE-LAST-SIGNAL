@@ -30,9 +30,15 @@ export function initConsoleEasterEgg(missionId: string) {
   );
 
   console.log(
-    `%c[DOM ANOMALY DIRECTIVE] %cTarget node #transmission-anomaly-node contains [data-signal-anomaly="SIG-7749-OMEGA"]. Inspect and verify.`,
+    `%c[DOM ANOMALY DIRECTIVE] %cTarget node #containment-anomaly-node contains [data-signal-anomaly="SIG-7749-OMEGA"]. Inspect and verify.`,
     'color: #f59e0b; font-weight: bold; background: #451a03; padding: 3px 6px; border-radius: 3px;',
     'color: #cbd5e1;'
+  );
+
+  console.log(
+    `%c[TRACK OMEGA // C1: PLOT TWIST] %cElement #containment-anomaly-node is quarantined under [data-containment-protocol="RESTRICTED"]. Mutate this attribute to "OVERRIDE" in the Elements panel to bypass containment.`,
+    'color: #22d3ee; font-weight: bold; background: #082f49; padding: 3px 6px; border-radius: 3px;',
+    'color: #e2e8f0;'
   );
 
   console.log(

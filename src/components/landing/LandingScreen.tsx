@@ -2,6 +2,7 @@ import React from 'react';
 import { useMission } from '../../hooks/useMission';
 import { MissionRole } from '../../engine/missionTypes';
 import { SignalHero } from '../common/SignalHero';
+import { ChallengeBoard } from '../challenges/ChallengeBoard';
 import {
   ArrowRight,
   ExternalLink,
@@ -9,6 +10,7 @@ import {
   VolumeX,
   RotateCcw,
 } from 'lucide-react';
+
 
 interface LandingScreenProps {
   onStartMission: (role?: MissionRole) => void;
@@ -143,11 +145,16 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onStartMission }) 
             </button>
           </div>
         </div>
+
+        {/* Phase 01 Override Hackathon Challenge Board */}
+        <div className="pt-6">
+          <ChallengeBoard defaultExpanded={false} />
+        </div>
       </div>
 
       {/* Footer System Classification */}
       <footer className="border-t border-noir-border pt-4 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] text-signal-dim">
-        <div>TRACK B: MYSTERY BOX // CINEMATIC SIGNAL NOIR</div>
+        <div>TRACK OMEGA // MYSTERY BOX // CINEMATIC SIGNAL NOIR</div>
         <div className="flex items-center gap-4">
           <span>BROADCASTCHANNEL SYNC</span>
           <span className="text-noir-border">//</span>

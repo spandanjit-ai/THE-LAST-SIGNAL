@@ -3,7 +3,8 @@ import { isCipherCorrect, EXPECTED_PLAINTEXT } from './cipher';
 
 export const ANOMALY_CODE = 'SIG-7749-OMEGA';
 export const ANOMALY_ATTRIBUTE_NAME = 'data-signal-anomaly';
-export const ANOMALY_ELEMENT_ID = 'transmission-anomaly-node';
+export const ANOMALY_ELEMENT_ID = 'containment-anomaly-node';
+export const LEGACY_ANOMALY_ELEMENT_ID = 'transmission-anomaly-node';
 
 // Expected SHA-256 hash of "THE LAST SIGNAL"
 export const EXPECTED_PLAINTEXT_HASH = '1f65bb51a9a20078dc1be04cb7bda1a63c874229b0a1faeec6d96eeb83bb379b';

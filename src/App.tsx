@@ -5,6 +5,7 @@ import { HeaderNav } from './components/common/HeaderNav';
 import { SignalHero } from './components/common/SignalHero';
 import { SynchronizedNodeMesh } from './components/common/SynchronizedNodeMesh';
 import { EvidenceDossier } from './components/common/EvidenceDossier';
+import { ChallengeBoard } from './components/challenges/ChallengeBoard';
 import { LandingScreen } from './components/landing/LandingScreen';
 import { TransmissionRole } from './components/roles/TransmissionRole';
 import { KeyRole } from './components/roles/KeyRole';
@@ -59,6 +60,9 @@ const MissionApp: React.FC = () => {
 
         {/* Interconnected Machine Topology Nodes */}
         <SynchronizedNodeMesh />
+
+        {/* Hackathon Evaluation: Surprise Challenge System (Track Omega) */}
+        <ChallengeBoard defaultExpanded={true} />
 
         {/* Primary Puzzle Workspace */}
         <section aria-label="Active Mission Terminal">

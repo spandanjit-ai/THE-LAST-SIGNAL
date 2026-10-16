@@ -228,6 +228,26 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
+  const completeChallenge = useCallback((challengeId: 'C1', attribute: string, value: string) => {
+    const cleanAttr = attribute.trim().toLowerCase();
+    const cleanVal = value.trim().toUpperCase();
+
+    if (challengeId === 'C1' && cleanAttr === 'data-containment-protocol' && cleanVal === 'OVERRIDE') {
+      SoundFX.playSuccessPing();
+      dispatch({
+        type: 'COMPLETE_CHALLENGE',
+        challengeId: 'C1',
+        attribute: cleanAttr,
+        value: cleanVal,
+        timestamp: Date.now(),
+      });
+      return true;
+    } else {
+      SoundFX.playWarning();
+      return false;
+    }
+  }, []);
+
   const triggerJudgeSolve = useCallback(() => {
     SoundFX.playSuccessPing();
     dispatch({ type: 'JUDGE_SOLVE_ALL' });
@@ -243,6 +263,7 @@ export const MissionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     startMission,
     discoverKey,
     confirmAnomaly,
+    completeChallenge,
     decodeCipher,
     submitFinalVault,
     retrySequence,
