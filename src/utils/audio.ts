@@ -154,4 +154,56 @@ export const SoundFX = {
       chordOsc.stop(now + 2.0);
     });
   },
+
+  /** Cosmic Supernova Singularity Detonation SFX */
+  playSupernova() {
+    if (isMuted) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // 1. Inward gravitational pull (sub bass whoosh descending)
+    const pullOsc = ctx.createOscillator();
+    const pullGain = ctx.createGain();
+    pullOsc.type = 'sine';
+    pullOsc.frequency.setValueAtTime(120, now);
+    pullOsc.frequency.exponentialRampToValueAtTime(30, now + 0.35);
+    pullGain.gain.setValueAtTime(0.01, now);
+    pullGain.gain.linearRampToValueAtTime(0.2, now + 0.35);
+    pullGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    pullOsc.connect(pullGain);
+    pullGain.connect(ctx.destination);
+    pullOsc.start(now);
+    pullOsc.stop(now + 0.42);
+
+    // 2. High-energy plasma blast
+    const blastOsc = ctx.createOscillator();
+    const blastGain = ctx.createGain();
+    blastOsc.type = 'triangle';
+    blastOsc.frequency.setValueAtTime(40, now + 0.36);
+    blastOsc.frequency.exponentialRampToValueAtTime(1400, now + 0.5);
+    blastOsc.frequency.exponentialRampToValueAtTime(80, now + 1.8);
+    blastGain.gain.setValueAtTime(0.25, now + 0.36);
+    blastGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
+    blastOsc.connect(blastGain);
+    blastGain.connect(ctx.destination);
+    blastOsc.start(now + 0.36);
+    blastOsc.stop(now + 2.3);
+
+    // 3. Ethereal celestial resonance chords
+    [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((freq, idx) => {
+      const harmOsc = ctx.createOscillator();
+      const harmGain = ctx.createGain();
+      harmOsc.type = 'sine';
+      harmOsc.frequency.setValueAtTime(freq, now + 0.4 + idx * 0.05);
+      harmGain.gain.setValueAtTime(0.08, now + 0.4 + idx * 0.05);
+      harmGain.gain.exponentialRampToValueAtTime(0.001, now + 2.8);
+      harmOsc.connect(harmGain);
+      harmGain.connect(ctx.destination);
+      harmOsc.start(now + 0.4 + idx * 0.05);
+      harmOsc.stop(now + 3.0);
+    });
+  },
 };
+

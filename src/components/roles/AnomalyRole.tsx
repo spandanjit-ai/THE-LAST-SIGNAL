@@ -8,6 +8,8 @@ import {
   attachContainmentObserver,
 } from '../../engine/challengeObserver';
 import { ANOMALY_CODE } from '../../engine/verification';
+import { SupernovaCanvas } from '../effects/SupernovaCanvas';
+import { SoundFX } from '../../utils/audio';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -15,6 +17,7 @@ import {
   Radio,
   Zap,
 } from 'lucide-react';
+
 
 export const AnomalyRole: React.FC = () => {
   const { state, completeChallenge, confirmAnomaly } = useMission();
@@ -38,10 +41,12 @@ export const AnomalyRole: React.FC = () => {
     const cleanup = attachContainmentObserver({
       targetElement: el,
       onValidMutation: (attribute, value) => {
+        SoundFX.playSupernova();
         completeChallenge('C1', attribute, value);
         confirmAnomaly(ANOMALY_CODE);
       },
     });
+
 
     return () => cleanup();
   }, [isC1Completed, completeChallenge, confirmAnomaly]);
@@ -99,6 +104,11 @@ export const AnomalyRole: React.FC = () => {
             : 'border-signal-amber/30 bg-noir-surface/90 hover:border-signal-amber/50 shadow-[0_0_30px_rgba(255,180,84,0.05)]'
         }`}
       >
+        {/* Real-time Supernova Cosmic Burst on Breach */}
+        {isC1Completed && (
+          <SupernovaCanvas active={true} className="z-0 opacity-80" />
+        )}
+
         {/* Radar & Forcefield Grid Overlay */}
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#22d3ee_1px,transparent_1px)] [background-size:24px_24px]" />
 

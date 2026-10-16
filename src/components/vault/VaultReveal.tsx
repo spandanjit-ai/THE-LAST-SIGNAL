@@ -18,7 +18,9 @@ import {
   Download,
 } from 'lucide-react';
 import { TerminalText } from '../common/TerminalText';
+import { SupernovaCanvas } from '../effects/SupernovaCanvas';
 import { RadioVoice } from '../../utils/radioVoice';
+import { SoundFX } from '../../utils/audio';
 import { exportMissionDossier } from '../../utils/exportDossier';
 
 interface VaultRevealProps {
@@ -41,6 +43,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+  const [supernovaKey, setSupernovaKey] = useState<number>(0);
 
   useEffect(() => {
     return () => {
@@ -48,14 +51,16 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
     };
   }, []);
 
-  // Trigger celebratory confetti on unlock
+  // Trigger celebratory Supernova burst and confetti on unlock
   useEffect(() => {
     if (state.unlockStatus === 'UNLOCKED') {
+      setSupernovaKey((prev) => prev + 1);
+      SoundFX.playSupernova();
       try {
         confetti({
-          particleCount: 110,
-          spread: 85,
-          origin: { y: 0.6 },
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.5 },
           colors: ['#22D3EE', '#8B7CFF', '#FFB454', '#E8EDF5'],
         });
       } catch {
@@ -63,6 +68,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
       }
     }
   }, [state.unlockStatus]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,6 +100,11 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
       >
         {/* Subtle scanline overlay */}
         <div className="absolute inset-0 scanlines-subtle opacity-25 pointer-events-none" />
+
+        {/* Cinematic Supernova Singularity Detonation Canvas */}
+        {state.unlockStatus === 'UNLOCKED' && (
+          <SupernovaCanvas active={true} triggerKey={supernovaKey} className="z-30" />
+        )}
 
         {/* Modal Top Telemetry Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-noir-border bg-noir-base/80">
@@ -393,7 +404,21 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                       <span className="w-1 h-2 bg-signal-cyan animate-pulse delay-150" />
                     </div>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSupernovaKey((k) => k + 1);
+                      SoundFX.playSupernova();
+                    }}
+                    className="px-3.5 py-2 rounded border border-signal-cyan/40 bg-signal-cyan/10 hover:bg-signal-cyan/20 text-signal-cyan font-display font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(34,211,238,0.15)] active:scale-95"
+                    title="Detonate cosmic supernova shockwave burst"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-signal-cyan animate-spin" />
+                    <span>RE-IGNITE SUPERNOVA</span>
+                  </button>
                 </div>
+
 
                 <button
                   type="button"
@@ -404,6 +429,7 @@ export const VaultReveal: React.FC<VaultRevealProps> = ({ onClose }) => {
                   <span>EXPORT CLASSIFIED DOSSIER (.TXT)</span>
                 </button>
               </div>
+
 
               {/* Mission Summary Debrief */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs text-signal-muted pt-3 border-t border-noir-border">
