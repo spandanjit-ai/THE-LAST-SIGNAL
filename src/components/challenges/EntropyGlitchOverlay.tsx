@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useMission } from '../../hooks/useMission';
 import { calculateEntropy, EntropyCalculationResult } from '../../engine/entropyTimer';
-import { AlertOctagon, RotateCcw, ShieldCheck, Flame, Activity } from 'lucide-react';
+import { AlertOctagon, RotateCcw, ShieldCheck, Flame, Activity, X } from 'lucide-react';
 import { SoundFX } from '../../utils/audio';
 
 export const EntropyGlitchOverlay: React.FC = () => {
-  const { state, recalibrateEntropy } = useMission();
+  const { state, recalibrateEntropy, stabilizeEntropyWithChecksum } = useMission();
   const { entropyState } = state;
+  const [isModalDismissed, setIsModalDismissed] = useState(false);
 
   const [metrics, setMetrics] = useState<EntropyCalculationResult>(() =>
     calculateEntropy(
@@ -190,9 +191,18 @@ export const EntropyGlitchOverlay: React.FC = () => {
       </div>
 
       {/* 3. Expiry Warning Modal if 90s Elapsed without stabilization */}
-      {isExpired && !isStabilized && (
+      {isExpired && !isStabilized && !isModalDismissed && (
         <div className="fixed inset-0 z-40 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#12080a] border-2 border-red-500 rounded-xl p-6 shadow-[0_0_40px_rgba(239,68,68,0.5)] flex flex-col gap-4 text-center">
+          <div className="max-w-md w-full bg-[#12080a] border-2 border-red-500 rounded-xl p-6 shadow-[0_0_40px_rgba(239,68,68,0.5)] flex flex-col gap-4 text-center relative">
+            {/* Dismiss Button */}
+            <button
+              onClick={() => setIsModalDismissed(true)}
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition-colors"
+              title="Dismiss warning"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
             <div className="w-12 h-12 rounded-full bg-red-950 border border-red-500 text-red-400 flex items-center justify-center mx-auto animate-pulse">
               <AlertOctagon className="w-7 h-7" />
             </div>
@@ -203,8 +213,8 @@ export const EntropyGlitchOverlay: React.FC = () => {
               <p className="font-mono text-xs text-slate-300 mt-2 leading-relaxed">
                 The 90-second entropy cascade elapsed before harmonic dampener stabilization.
                 Scrub the Temporal Scrubber to T+0s to recover pre-entropy code{' '}
-                <strong className="text-amber-300 font-mono">0x7749-CLEAR</strong>, then
-                re-calibrate the oscillator.
+                <strong className="text-amber-300 font-mono">0x7749-CLEAR</strong>, or
+                re-calibrate / stabilize the oscillator below.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2.5 mt-2">
@@ -213,7 +223,17 @@ export const EntropyGlitchOverlay: React.FC = () => {
                 className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-extrabold rounded-lg shadow-lg transition-all flex items-center justify-center gap-1.5"
               >
                 <RotateCcw className="w-4 h-4" />
-                RE-CALIBRATE (RESET 90s TIMER)
+                RESET 90s TIMER
+              </button>
+              <button
+                onClick={() => {
+                  SoundFX.playSuccessPing();
+                  stabilizeEntropyWithChecksum('0x7749-CLEAR');
+                }}
+                className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-extrabold rounded-lg shadow-lg transition-all flex items-center justify-center gap-1.5"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                STABILIZE DAMPENER
               </button>
             </div>
           </div>
